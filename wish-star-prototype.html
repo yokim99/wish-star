@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>我们的 100 颗许愿星 · 交互原型</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --night-1: #17092b;
+    --night-2: #33173a;
+    --night-3: #542a4b;
+    --star-dim: #6d5a80;
+    --star-glow: #ffb6c1;
+    --star-bright: #fff6fa;
+    --pink: #ff77b0;
+    --pink-deep: #ff3d8b;
+    --pink-soft: #ffd9e8;
+    --pink-mist: rgba(255, 182, 193, 0.35);
+    --card: rgba(255, 252, 254, 0.94);
+    --ink: #4a2b3d;
+    --ink-soft: #8a6a7d;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    overflow: hidden;
+  }
+
+  body {
+    background: linear-gradient(170deg, var(--night-1) 0%, var(--night-2) 45%, var(--night-3) 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* 背景柔光 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(255, 119, 176, 0.18) 0%, transparent 45%),
+      radial-gradient(circle at 82% 78%, rgba(255, 82, 150, 0.14) 0%, transparent 42%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 520px;
+    height: 100%;
+    max-height: 940px;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 18px 14px;
+  }
+
+  /* ===== 顶部标题 ===== */
+  .app-header { text-align: center; position: relative; padding-bottom: 6px; }
+
+  .kitty-badge {
+    width: 46px; height: 40px;
+    margin: 0 auto 10px;
+    position: relative;
+  }
+
+  .kitty-face-svg { display: block; }
+
+  .app-title {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #fff 0%, var(--pink-soft) 50%, #fff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+
+  .app-sub {
+    font-size: 11.5px;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== 进度 ===== */
+  .progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.62);
+  }
+
+  .progress .num {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--pink-soft);
+    text-shadow: 0 0 16px rgba(255, 182, 193, 0.8);
+  }
+
+  .progress .track {
+    width: 120px; height: 5px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.12);
+    overflow: hidden;
+    margin-left: 6px;
+  }
+
+  .progress .fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--pink), var(--pink-soft));
+    box-shadow: 0 0 10px var(--pink-mist);
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* ===== 星空 ===== */
+  .sky-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    margin: 10px 0;
+  }
+
+  .sky {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    max-height: 100%;
+    border-radius: 24px;
+    background:
+      radial-gradient(circle at 50% 40%, rgba(255, 119, 176, 0.10) 0%, transparent 60%),
+      rgba(255, 255, 255, 0.015);
+    border: 1px solid rgba(255, 182, 193, 0.10);
+  }
+
+  /* 月亮装饰 */
+  .moon {
+    position: absolute;
+    top: -14px; right: 6px;
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 32%, #fff7fb 0%, #ffd9e8 55%, #ffb6c1 100%);
+    box-shadow: 0 0 34px rgba(255, 214, 230, 0.55), 0 0 70px rgba(255, 182, 193, 0.3);
+    opacity: 0.9;
+    z-index: 2;
+  }
+
+  .moon::after {
+    content: '';
+    position: absolute;
+    top: 12px; left: -8px;
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    background: var(--night-2);
+    opacity: 0.92;
+  }
+
+  /* 角落猫咪装饰 */
+  .kitty-corner {
+    position: absolute;
+    z-index: 2;
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .kitty-corner.tl { top: 10px; left: 10px; transform: rotate(-8deg); }
+  .kitty-corner.br { bottom: 12px; right: 12px; transform: rotate(10deg); }
+
+  /* 星星 */
+  .star {
+    position: absolute;
+    width: 22px; height: 22px;
+    margin: -11px 0 0 -11px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    z-index: 3;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .star .dot {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--star-dim);
+    opacity: 0.85;
+    transition: all 0.45s ease;
+  }
+
+  .star .spark {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 0%, var(--star-glow) 40%, transparent 70%);
+    opacity: 0;
+    transform: scale(0.3);
+    transition: all 0.5s ease;
+  }
+
+  /* 未点亮：微光呼吸 */
+  .star:not(.lit) .dot {
+    animation: dim-pulse 3.2s ease-in-out infinite;
+    animation-delay: var(--d, 0s);
+  }
+
+  @keyframes dim-pulse {
+    0%, 100% { opacity: 0.45; transform: scale(0.85); }
+    50% { opacity: 0.95; transform: scale(1); }
+  }
+
+  /* 已点亮 */
+  .star.lit .dot {
+    background: var(--star-bright);
+    box-shadow: 0 0 14px var(--pink-soft), 0 0 26px var(--pink-mist);
+    opacity: 1;
+  }
+
+  .star.lit .spark { opacity: 0.9; transform: scale(2.4); }
+  .star.lit { animation: lit-float 4s ease-in-out infinite; animation-delay: var(--d, 0s); }
+
+  @keyframes lit-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+
+  /* 空位（缺号） */
+  .star.empty { cursor: default; pointer-events: none; }
+  .star.empty .dot {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: none;
+    animation: none;
+    opacity: 0.5;
+  }
+
+  /* 冷却锁定态 */
+  .star.locked { cursor: not-allowed; }
+  .star.locked .dot {
+    background: var(--star-dim);
+    opacity: 0.3;
+    animation: none;
+    transform: scale(0.8);
+  }
+
+  .star:not(.lit):not(.locked):not(.empty):hover { transform: scale(1.35); }
+
+  /* 点击爆闪 */
+  .star.burst .spark {
+    animation: burst 0.9s ease-out forwards;
+  }
+
+  @keyframes burst {
+    0% { opacity: 1; transform: scale(0.4); }
+    60% { opacity: 1; transform: scale(3.4); }
+    100% { opacity: 0; transform: scale(4.2); }
+  }
+
+  /* 星光射线 */
+  .ray {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 2px; height: 22px;
+    margin-left: -1px;
+    background: linear-gradient(to bottom, var(--pink-soft), transparent);
+    border-radius: 2px;
+    transform-origin: top center;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  .brigade .ray { animation: ray-out 0.8s ease-out forwards; }
+
+  @keyframes ray-out {
+    0% { opacity: 0; transform: rotate(var(--a)) translateY(0) scaleY(0.3); }
+    40% { opacity: 1; }
+    100% { opacity: 0; transform: rotate(var(--a)) translateY(var(--dist, 34px)) scaleY(1.6); }
+  }
+
+  /* ===== 底部冷却栏 ===== */
+  .cooldown-bar {
+    border-radius: 16px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 182, 193, 0.14);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 62px;
+    transition: background 0.4s;
+  }
+
+  .cd-icon { font-size: 20px; line-height: 1; }
+
+  .cd-text { flex: 1; }
+
+  .cd-title { font-size: 12.5px; font-weight: 700; color: var(--pink-soft); margin-bottom: 2px; }
+  .cd-sub { font-size: 11px; color: rgba(255, 255, 255, 0.48); }
+
+  .cd-timer {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 1px;
+    min-width: 68px;
+    text-align: right;
+  }
+
+  .cd-timer.ready { color: var(--pink-soft); font-size: 15px; }
+  .cooldown-bar.ready { background: rgba(255, 182, 193, 0.12); }
+
+  /* ===== 记录卡片弹窗 ===== */
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(20, 8, 28, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .modal.show { display: flex; animation: fade-in 0.35s ease; }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+  .card {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 22px;
+    padding: 30px 26px 24px;
+    background: var(--card);
+    color: var(--ink);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 182, 193, 0.5), 0 0 44px rgba(255, 119, 176, 0.35);
+    animation: card-in 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+  }
+
+  @keyframes card-in {
+    from { opacity: 0; transform: scale(0.82) translateY(24px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 119, 176, 0.22) 0%, transparent 70%);
+  }
+
+  .card-num {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 2px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--pink) 0%, var(--pink-deep) 100%);
+    color: #fff;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 14px rgba(255, 61, 139, 0.4);
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-num .hash { font-size: 11px; opacity: 0.8; }
+
+  .card-body {
+    margin: 20px 0 18px;
+    font-size: 15.5px;
+    line-height: 1.85;
+    color: var(--ink);
+    letter-spacing: 0.2px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 逐字渐显 */
+  .card-body .ch {
+    opacity: 0;
+    animation: ch-in 0.4s ease forwards;
+  }
+
+  @keyframes ch-in {
+    from { opacity: 0; transform: translateY(6px); filter: blur(3px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+
+  .card-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 61, 139, 0.25), transparent);
+    margin-bottom: 16px;
+  }
+
+  /* AI 祝福语区 */
+  .ai-zone {
+    border-radius: 14px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, rgba(255, 217, 232, 0.55), rgba(255, 252, 254, 0.9));
+    border: 1px dashed rgba(255, 61, 139, 0.35);
+    position: relative;
+    z-index: 1;
+  }
+
+  .ai-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--pink-deep);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .ai-body {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    min-height: 22px;
+  }
+
+  .ai-btn {
+    margin-top: 10px;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    box-shadow: 0 4px 12px rgba(255, 61, 139, 0.32);
+    transition: transform 0.2s;
+    font-family: inherit;
+  }
+
+  .ai-btn:active { transform: scale(0.96); }
+
+  .card-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 61, 139, 0.1);
+    color: var(--pink-deep);
+    font-size: 17px;
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* 原型提示标签 */
+  .proto-tag {
+    position: fixed;
+    top: 10px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 60;
+    font-size: 10.5px;
+    letter-spacing: 0.5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255, 61, 139, 0.16);
+    border: 1px solid rgba(255, 182, 193, 0.28);
+    color: var(--pink-soft);
+    pointer-events: none;
+  }
+
+  /* 轻提示 */
+  .toast {
+    position: fixed;
+    bottom: 96px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    z-index: 70;
+    padding: 10px 20px;
+    border-radius: 24px;
+    font-size: 12.5px;
+    color: #fff;
+    background: rgba(255, 61, 139, 0.9);
+    box-shadow: 0 8px 24px rgba(255, 61, 139, 0.4);
+    opacity: 0;
+    transition: all 0.35s ease;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-height: 720px) {
+    .app-header { padding-bottom: 2px; }
+    .kitty-badge { display: none; }
+    .app-title { font-size: 19px; }
+    .app { padding-top: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="proto-tag">交互原型 · 示例数据演示</div>
+
+<div class="app">
+  <header class="app-header">
+    <div class="kitty-badge">
+      <svg class="kitty-face-svg" width="46" height="40" viewBox="0 0 46 40" fill="none">
+        <ellipse cx="23" cy="23" rx="17" ry="14" fill="#fff" stroke="#ff77b0" stroke-width="1.5"/>
+        <path d="M8 12 L10 2 L17 9 Z" fill="#fff" stroke="#ff77b0" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M38 12 L36 2 L29 9 Z" fill="#fff" stroke="#ff77b0" stroke-width="1.5" stroke-linejoin="round"/>
+        <ellipse cx="16" cy="21" rx="1.8" ry="2.4" fill="#3a2233"/>
+        <ellipse cx="30" cy="21" rx="1.8" ry="2.4" fill="#3a2233"/>
+        <ellipse cx="23" cy="26" rx="2.4" ry="1.8" fill="#ffdf3d"/>
+        <path d="M18 12 Q17 6 22 7 Q27 6 26 12 Q22 15 18 12 Z" fill="#ff3d8b"/>
+        <circle cx="22" cy="9.5" r="1.6" fill="#fff" opacity="0.85"/>
+        <g stroke="#ff77b0" stroke-width="1.3" stroke-linecap="round" opacity="0.7">
+          <path d="M3 20 L11 22"/><path d="M3 26 L11 25"/>
+          <path d="M43 20 L35 22"/><path d="M43 26 L35 25"/>
+        </g>
+      </svg>
+    </div>
+    <h1 class="app-title">我们的 100 颗许愿星</h1>
+    <p class="app-sub">100 天 · 100 个瞬间 · 点亮属于我们的星光</p>
+    <div class="progress">
+      <span class="num" id="progressNum">0</span>
+      <span>/ 100 已点亮</span>
+      <span class="track"><span class="fill" id="progressFill"></span></span>
+    </div>
+  </header>
+
+  <div class="sky-wrap">
+    <div class="sky" id="sky">
+      <div class="moon"></div>
+      <svg class="kitty-corner tl" width="52" height="46" viewBox="0 0 46 40">
+        <ellipse cx="23" cy="23" rx="16" ry="13" fill="#ffd9e8" opacity="0.5"/>
+        <path d="M9 13 L11 3 L18 10 Z" fill="#ffd9e8" opacity="0.5"/>
+        <path d="M37 13 L35 3 L28 10 Z" fill="#ffd9e8" opacity="0.5"/>
+        <path d="M18 12 Q17 6 22 7 Q27 6 26 12 Q22 15 18 12 Z" fill="#ff3d8b" opacity="0.6"/>
+      </svg>
+      <svg class="kitty-corner br" width="46" height="40" viewBox="0 0 46 40">
+        <ellipse cx="23" cy="23" rx="16" ry="13" fill="#ffd9e8" opacity="0.45"/>
+        <path d="M9 13 L11 3 L18 10 Z" fill="#ffd9e8" opacity="0.45"/>
+        <path d="M37 13 L35 3 L28 10 Z" fill="#ffd9e8" opacity="0.45"/>
+        <path d="M18 12 Q17 6 22 7 Q27 6 26 12 Q22 15 18 12 Z" fill="#ff3d8b" opacity="0.55"/>
+      </svg>
+    </div>
+  </div>
+
+  <footer class="cooldown-bar" id="cooldownBar">
+    <div class="cd-icon">🌟</div>
+    <div class="cd-text">
+      <div class="cd-title" id="cdTitle">现在可以点亮一颗星星</div>
+      <div class="cd-sub" id="cdSub">轻触星空中任意一颗微光星</div>
+    </div>
+    <div class="cd-timer" id="cdTimer">00:00</div>
+  </footer>
+</div>
+
+<div class="modal" id="modal">
+  <div class="card">
+    <button class="card-close" id="cardClose">✕</button>
+    <span class="card-num"><span class="hash">#</span><span id="cardNum">01</span></span>
+    <div class="card-body" id="cardBody"></div>
+    <div class="card-divider"></div>
+    <div class="ai-zone">
+      <div class="ai-head">💗 AI 为你写一句话</div>
+      <div class="ai-body" id="aiBody">点一下，让 AI 根据这段回忆写句情话回应你</div>
+      <button class="ai-btn" id="aiBtn">生成情话回信</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   配置区（可维护项）
+   ============================================================ */
+const CONFIG = {
+  TOTAL: 100,
+  COOLDOWN_SECONDS: 300,   // 冷却时长（秒）：测试阶段 5 分钟 = 300
+  LOCK_OTHERS_DURING_CD: true,
+  AI_ENABLED: true
+};
+
+/* 示例素材：编号 -> 文本。缺号表示该位暂无故事（原型按"空位"渲染） */
+const RECORDS = {
+  "01": "我总喜欢说你是小狗，其实潜意识里是觉得可爱，深层上是觉得，我希望感情也是像小狗，因为小狗的爱最真诚，因为小狗要是爱你，就会一直爱你。",
+  "07": "你送我盲盒开出隐藏款，和我一起买彩票各中了一次，我当时心想，我这人运气好吗，你不会是我的福星吧。",
+  "08": "你好喜欢夸我啊，你一夸我就忍不住想抱你，于是某一天我说，「那你要一直喜欢我」，你说，「是的，公主。」",
+  "09": "蛮神奇的，两个不相信永恒的人。",
+  "12": "你半夜给我带的宵夜，永远记得我不吃香菜。",
+  "23": "我们第一次一起看的那场日落，风很大，你把我外套拉链拉到最上面。",
+  "45": "吵架的时候你从来不争输赢，只会先把我的手握住。",
+  "100": "第 100 天。谢谢你，把平凡的日子过成了星星。"
+};
+
+/* AI 兜底文案（无 API / 异常时使用） */
+const AI_FALLBACK = [
+  "如果爱有形状，大概就是你笑起来的样子。",
+  "记得住这些小事的人，才是认真爱我的人。",
+  "我们的故事没有惊天动地，却每一句都想收藏。",
+  "遇到你以后，普通的一天也值得被点亮。",
+  "谢谢你，让我的日常里住进了一整个春天。"
+];
+
+/* ============================================================
+   状态与存储
+   ============================================================ */
+const LS_KEY = 'wish-star-state-v1';
+let state = loadState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return { lit: [], lastLitAt: 0 };
+}
+
+function saveState() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+/* ============================================================
+   渲染星空
+   ============================================================ */
+const sky = document.getElementById('sky');
+const starEls = {};
+
+function buildSky() {
+  for (let i = 0; i < CONFIG.TOTAL; i++) {
+    const num = String(i + 1).padStart(2, '0');
+    const col = i % 10;
+    const row = Math.floor(i / 10);
+    const x = ((col + 0.5 + (rand(i * 2.3) - 0.5) * 0.55) / 10) * 100;
+    const y = ((row + 0.5 + (rand(i * 3.7) - 0.5) * 0.55) / 10) * 100;
+
+    const btn = document.createElement('button');
+    btn.className = 'star' + (RECORDS[num] ? '' : ' empty');
+    btn.style.left = x + '%';
+    btn.style.top = y + '%';
+    btn.style.setProperty('--d', (rand(i * 5.1) * 3).toFixed(2) + 's');
+    btn.dataset.num = num;
+
+    const dot = document.createElement('span');
+    dot.className = 'dot';
+    const spark = document.createElement('span');
+    spark.className = 'spark';
+    btn.appendChild(dot);
+    btn.appendChild(spark);
+
+    for (let r = 0; r < 8; r++) {
+      const ray = document.createElement('span');
+      ray.className = 'ray';
+      ray.style.setProperty('--a', (r * 45) + 'deg');
+      ray.style.setProperty('--dist', (26 + rand(i + r) * 14).toFixed(0) + 'px');
+      btn.appendChild(ray);
+    }
+
+    if (RECORDS[num]) {
+      btn.addEventListener('click', () => onStarClick(num, btn));
+    }
+    sky.appendChild(btn);
+    starEls[num] = btn;
+  }
+}
+
+function rand(seed) {
+  const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
+  return x - Math.floor(x);
+}
+
+/* ============================================================
+   点亮逻辑
+   ============================================================ */
+function onStarClick(num, btn) {
+  if (state.lit.includes(num)) {
+    openCard(num);  // 已点亮：可再次查看
+    return;
+  }
+  if (isCoolingDown()) { showToast('星星也在慢慢发光，稍等一会儿吧 ✨'); return; }
+
+  btn.classList.add('burst', 'brigade', 'lit');
+  playChime();
+  state.lit.push(num);
+  state.lastLitAt = Date.now();
+  saveState();
+  updateProgress();
+  updateCooldownUI();
+  setTimeout(() => openCard(num), 420);
+}
+
+function isCoolingDown() {
+  if (!state.lastLitAt) return false;
+  return (Date.now() - state.lastLitAt) < CONFIG.COOLDOWN_SECONDS * 1000;
+}
+
+function updateProgress() {
+  const n = state.lit.length;
+  document.getElementById('progressNum').textContent = n;
+  document.getElementById('progressFill').style.width = (n / CONFIG.TOTAL * 100) + '%';
+}
+
+/* ============================================================
+   冷却 UI
+   ============================================================ */
+let cdTimer = null;
+
+function updateCooldownUI() {
+  const bar = document.getElementById('cooldownBar');
+  const title = document.getElementById('cdTitle');
+  const sub = document.getElementById('cdSub');
+  const timer = document.getElementById('cdTimer');
+
+  if (isCoolingDown()) {
+    bar.classList.remove('ready');
+    timer.classList.remove('ready');
+    title.textContent = '星光正在凝聚…';
+    sub.textContent = '下一颗星星点亮倒计时';
+    if (CONFIG.LOCK_OTHERS_DURING_CD) lockStars(true);
+
+    clearInterval(cdTimer);
+    cdTimer = setInterval(() => {
+      const remain = CONFIG.COOLDOWN_SECONDS * 1000 - (Date.now() - state.lastLitAt);
+      if (remain <= 0) {
+        clearInterval(cdTimer);
+        updateCooldownUI();
+        return;
+      }
+      timer.textContent = fmt(remain);
+    }, 250);
+    timer.textContent = fmt(CONFIG.COOLDOWN_SECONDS * 1000 - (Date.now() - state.lastLitAt));
+  } else {
+    clearInterval(cdTimer);
+    bar.classList.add('ready');
+    timer.classList.add('ready');
+    timer.textContent = 'READY';
+    title.textContent = '现在可以点亮一颗星星';
+    sub.textContent = '轻触星空中任意一颗微光星';
+    lockStars(false);
+  }
+}
+
+function lockStars(lock) {
+  Object.values(starEls).forEach(el => {
+    if (el.classList.contains('lit') || el.classList.contains('empty')) return;
+    el.classList.toggle('locked', lock);
+  });
+}
+
+function fmt(ms) {
+  if (ms < 0) ms = 0;
+  const s = Math.ceil(ms / 1000);
+  return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+}
+
+/* ============================================================
+   记录卡片
+   ============================================================ */
+let currentNum = null;
+
+function openCard(num) {
+  currentNum = num;
+  document.getElementById('cardNum').textContent = num;
+  const body = document.getElementById('cardBody');
+  body.innerHTML = '';
+  const text = RECORDS[num] || '';
+  text.split('').forEach((ch, i) => {
+    const span = document.createElement('span');
+    span.className = 'ch';
+    span.textContent = ch;
+    span.style.animationDelay = (i * 0.028) + 's';
+    body.appendChild(span);
+  });
+  document.getElementById('aiBody').textContent = '点一下，让 AI 根据这段回忆写句情话回应你';
+  document.getElementById('aiBtn').style.display = CONFIG.AI_ENABLED ? 'inline-block' : 'none';
+  document.getElementById('modal').classList.add('show');
+}
+
+function closeCard() {
+  document.getElementById('modal').classList.remove('show');
+  currentNum = null;
+}
+
+/* AI 情话（原型：本地兜底演示；正式版调用大模型 API） */
+document.getElementById('aiBtn').addEventListener('click', () => {
+  const el = document.getElementById('aiBody');
+  el.textContent = 'AI 正在想…';
+  setTimeout(() => {
+    const i = (Number(currentNum) || 0) % AI_FALLBACK.length;
+    el.textContent = AI_FALLBACK[i];
+  }, 900);
+});
+
+document.getElementById('cardClose').addEventListener('click', closeCard);
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target.id === 'modal') closeCard();
+});
+
+/* ============================================================
+   音效（Web Audio 合成轻柔铃音）
+   ============================================================ */
+let audioCtx = null;
+function playChime() {
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const now = audioCtx.currentTime;
+    [880, 1174, 1568].forEach((f, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = f;
+      gain.gain.setValueAtTime(0, now + i * 0.07);
+      gain.gain.linearRampToValueAtTime(0.12, now + i * 0.07 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.07 + 0.7);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(now + i * 0.07);
+      osc.stop(now + i * 0.07 + 0.75);
+    });
+  } catch (e) {}
+}
+
+/* ============================================================
+   轻提示
+   ============================================================ */
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ============================================================
+   初始化
+   ============================================================ */
+buildSky();
+updateProgress();
+updateCooldownUI();
+
+/* 恢复已点亮星星 */
+state.lit.forEach(num => {
+  if (starEls[num]) starEls[num].classList.add('lit');
+});
+</script>
+</body>
+</html>
