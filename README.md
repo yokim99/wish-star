@@ -118,6 +118,29 @@ python3 -m http.server 8000
 
 仓库：`github.com/yokim99/wish-star`（GitHub Pages）。链接固定不变，改完文件推上去即可。
 
+### 方式一（推荐）：一键部署脚本
+
+本机网络对 `github.com` 域名受限，且 macOS 自带 git 使用 LibreSSL，直接 `git push` 可能会失败（报 `tlsv1 alert protocol version`）。因此**推荐直接运行仓库内的 `deploy.sh` 脚本**，它走 GitHub REST API（`api.github.com` 可正常访问）上传文件，绕开上述限制。
+
+```bash
+cd wish-star
+bash deploy.sh
+```
+
+脚本会自动：
+
+1. 读取 `gh` 的登录 token；
+2. 依次上传 `index.html`、`config.js`、`records.json`、`README.md` 四个文件（先查已有文件 sha，再 PUT 更新/新建）；
+3. 每个文件带 3 次重试，任一文件失败会打印错误并退出。
+
+全部成功后，约 30 秒公网生效，访问：
+
+<https://raw.githack.com/yokim99/wish-star/main/index.html>
+
+> 若首次运行提示权限不足或 `gh` 未登录，先执行 `gh auth login` 完成登录。
+
+### 方式二：git push（网络正常时可用）
+
 ```bash
 cd wish-star
 git add .
