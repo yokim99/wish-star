@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#120a1f">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 3 L40 23 L62 25 L45.5 39.5 L51 61 L32 49 L13 61 L18.5 39.5 L2 25 L24 23 Z' fill='%23d98c99'/><circle cx='32' cy='30' r='7' fill='%23fff6fa' opacity='.65'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 1 L39.7 24.3 L63 32 L39.7 39.7 L32 63 L24.3 39.7 L1 32 L24.3 24.3 Z' fill='%23d98c99'/><circle cx='32' cy='32' r='6' fill='%23fff6fa' opacity='.7'/></svg>">
 <title>敏老师和璇老师的100颗回忆星</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -13,7 +13,10 @@
     --night-1: #120a1f;
     --night-2: #241134;
     --night-3: #3a1e4d;
-    --star-shape: polygon(50% 0%, 65% 30%, 98% 35%, 74% 58%, 79% 90%, 50% 75%, 21% 90%, 26% 58%, 2% 35%, 35% 30%);
+    --star-shape: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
+    --star-gray: #7a7286;
+    --star-gray-mid: #6a6273;
+    --star-gray-deep: #45404e;
     --star-dim: #7c6a7e;
     --star-glow: #e8a5b0;
     --star-bright: #faf5f0;
@@ -56,43 +59,7 @@
     z-index: 0;
   }
 
-  /* ===== 全屏细密星点层（JS 生成 200+ 颗） ===== */
-  .starfield {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    overflow: hidden;
-    pointer-events: none;
-  }
-
-  /* 背景星点：纯装饰，暗小、无光晕、无描边，绝不与五角星混淆 */
-  .starfield .bg-star,
-  .sky-bg-star {
-    position: absolute;
-    border-radius: 50%;
-    background: var(--cream);
-    box-shadow: none;
-    pointer-events: none;
-  }
-
-  /* 少量背景星用极细十字，丰富层次但依旧很暗 */
-  .starfield .bg-star.mini-cross,
-  .sky-bg-star.mini-cross {
-    border-radius: 0;
-    background:
-      linear-gradient(var(--cream), var(--cream)) center / 1px 100% no-repeat,
-      linear-gradient(var(--cream), var(--cream)) center / 100% 1px no-repeat;
-  }
-
-  .sky-bg-star { z-index: 0; }
-
-  .starfield .bg-star.twinkle,
-  .sky-bg-star.twinkle { animation: star-twinkle var(--tw, 4s) ease-in-out infinite; }
-
-  @keyframes star-twinkle {
-    0%, 100% { opacity: var(--o, 0.3); }
-    50% { opacity: calc(var(--o, 0.3) + 0.16); }
-  }
+  /* ===== 背景氛围：仅保留 body 渐变 + sky 星云，不再生成散点 ===== */
 
   .app {
     position: relative;
@@ -191,47 +158,39 @@
     z-index: 0;
   }
 
-  /* 参考图气质的可爱点缀：心形 + 十字星（柔和粉彩，纯装饰） */
-  .sky-deco {
+  /* ===== 装饰层（月亮 / 心形 / 黄色十字星 / 猫耳角标）已移除 ===== */
+
+  /* ===== 首次访问引导提示（仅首次显示，数秒后淡出） ===== */
+  .hint {
     position: absolute;
-    inset: 0;
-    width: 100%; height: 100%;
+    left: 50%;
+    bottom: 16px;
+    transform: translate(-50%, 8px);
+    z-index: 6;
+    max-width: 88%;
+    text-align: center;
+    padding: 9px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    color: #fff;
+    background: rgba(201, 123, 140, 0.26);
+    border: 1px solid rgba(232, 165, 176, 0.4);
+    box-shadow: 0 0 22px rgba(232, 165, 176, 0.3);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
     pointer-events: none;
-    z-index: 2;
-    overflow: hidden;
-    border-radius: inherit;
-    opacity: 0.72;
+    transition: opacity 0.6s ease, transform 0.6s ease;
   }
 
-  .deco-heart { fill: var(--pink-soft); stroke: var(--pink); stroke-width: 0.6; }
-  .deco-heart.deep { fill: var(--pink); stroke: none; }
-  .deco-cross { fill: var(--gold); opacity: 0.85; }
-  .deco-cross.soft { fill: var(--cream); opacity: 0.75; }
-
-  .moon {
-    position: absolute;
-    top: -14px; right: 6px;
-    width: 70px; height: 70px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 32%, #fffaf2 0%, #f7e6c8 48%, var(--gold) 100%);
-    box-shadow: 0 0 34px rgba(244, 213, 200, 0.5), 0 0 70px rgba(232, 213, 160, 0.3);
-    opacity: 0.9;
-    z-index: 2;
+  .hint.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+    pointer-events: auto;
+    cursor: pointer;
   }
-
-  .moon::after {
-    content: '';
-    position: absolute;
-    top: 12px; left: -8px;
-    width: 58px; height: 58px;
-    border-radius: 50%;
-    background: var(--night-2);
-    opacity: 0.92;
-  }
-
-  .kitty-corner { position: absolute; z-index: 2; opacity: 0.55; pointer-events: none; }
-  .kitty-corner.tl { top: 10px; left: 10px; transform: rotate(-8deg); }
-  .kitty-corner.br { bottom: 12px; right: 12px; transform: rotate(10deg); }
 
   /* 星星 */
   .star {
@@ -246,37 +205,24 @@
     transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  /* 描边层：粉色五角星轮廓（提供"召唤感"的轮廓基底） */
+  /* 十字星形状层：主填充色随状态变化（灰 → 点亮发光） */
   .star::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(255, 255, 255, 0.12);
-    opacity: 0.6;
-    transition: background 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+    background: var(--star-gray-mid);
+    opacity: 0.72;
+    transition: background 0.4s ease, opacity 0.4s ease;
     pointer-events: none;
     -webkit-clip-path: var(--star-shape);
     clip-path: var(--star-shape);
   }
 
-  /* 脉冲提示环：仅"可点亮"星显示，缓慢扩散淡出（伪元素，不占点击区） */
-  .star::after {
-    content: '';
-    position: absolute;
-    inset: 5px;
-    border-radius: 50%;
-    border: 1.5px solid var(--pink);
-    opacity: 0;
-    pointer-events: none;
-    z-index: -1;
-    box-shadow: 0 0 6px rgba(232, 165, 176, 0.55);
-  }
-
-  /* 五角星内芯（clip-path 星形，圆润饱满） */
+  /* 十字星内芯（点亮后 +3px 内层更亮，增强发光层次） */
   .star .dot {
     position: absolute;
     inset: 3px;
-    background: radial-gradient(circle at 50% 42%, rgba(58, 30, 77, 0.72) 0%, rgba(26, 13, 34, 0.88) 82%);
+    background: transparent;
     opacity: 0.9;
     transition: all 0.45s ease;
     -webkit-clip-path: var(--star-shape);
@@ -294,43 +240,27 @@
     clip-path: var(--star-shape);
   }
 
-  /* ---- 未点亮可点亮态：粉描边 + 柔和外发光 + 脉冲提示环 ---- */
-  .star:not(.lit):not(.locked):not(.empty) {
-    filter: drop-shadow(0 0 7px rgba(232, 165, 176, 0.45));
-  }
-
+  /* ---- 未点亮可点亮态：灰色十字星（无光晕 / 无脉冲环，极轻微呼吸） ---- */
   .star:not(.lit):not(.locked):not(.empty)::before {
-    background: var(--pink);
-    opacity: 0.92;
-    filter: drop-shadow(0 0 6px rgba(232, 165, 176, 0.75));
-  }
-
-  .star:not(.lit):not(.locked):not(.empty)::after {
-    animation: star-ring 2.6s ease-out infinite;
+    background: linear-gradient(160deg, var(--star-gray) 0%, var(--star-gray-deep) 100%);
+    opacity: 0.82;
+    animation: dim-breathe 4.6s ease-in-out infinite;
     animation-delay: var(--d, 0s);
   }
 
   .star:not(.lit):not(.locked):not(.empty) .dot {
-    animation: dim-pulse 3.4s ease-in-out infinite;
-    animation-delay: var(--d, 0s);
+    background: transparent;
   }
 
-  @keyframes star-ring {
-    0% { transform: scale(0.55); opacity: 0.75; }
-    70% { opacity: 0; }
-    100% { transform: scale(2.35); opacity: 0; }
+  @keyframes dim-breathe {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 0.86; }
   }
 
-  @keyframes dim-pulse {
-    0%, 100% { opacity: 0.55; transform: scale(0.86); }
-    50% { opacity: 0.98; transform: scale(1); }
-  }
-
-  /* ---- 已点亮：暖粉→淡金渐变填充 + 明显光晕 ---- */
+  /* ---- 已点亮：暖粉→淡金渐变填充，光晕仅写在外层元素上 ---- */
   .star.lit::before {
     background: linear-gradient(150deg, var(--gold), var(--pink-soft) 58%, var(--pink));
     opacity: 1;
-    filter: drop-shadow(0 0 8px rgba(244, 194, 194, 0.8));
   }
 
   .star.lit .dot {
@@ -339,7 +269,7 @@
   }
 
   .star.lit {
-    filter: drop-shadow(0 0 8px var(--pink-soft)) drop-shadow(0 0 18px var(--pink));
+    filter: drop-shadow(0 0 7px var(--pink-soft)) drop-shadow(0 0 16px var(--pink));
   }
 
   .star.lit .spark { opacity: 0.9; transform: scale(2.4); }
@@ -350,37 +280,53 @@
     50% { transform: translateY(-3px); }
   }
 
-  /* ---- 空位（缺号）：更暗，无光晕、无脉冲 ---- */
+  /* ---- 空位（缺号）：极暗灰十字，几乎不可见，仅保留占位 ---- */
   .star.empty { cursor: default; }
   .star.empty::before {
-    background: rgba(255, 255, 255, 0.05);
-    opacity: 0.4;
-    filter: none;
+    background: var(--star-gray-deep);
+    opacity: 0.15;
+    animation: none;
   }
 
   .star.empty .dot {
-    background: rgba(255, 255, 255, 0.05);
+    background: transparent;
     box-shadow: none;
     animation: none;
-    opacity: 0.4;
+    opacity: 0.2;
   }
 
-  /* ---- 冷却锁定：置灰，无光晕、无脉冲 ---- */
+  /* ---- 冷却锁定：更暗的灰十字，无光晕 ---- */
   .star.locked { cursor: not-allowed; }
   .star.locked::before {
-    background: #4a3f4e;
-    opacity: 0.45;
-    filter: none;
+    background: #3a3542;
+    opacity: 0.3;
+    animation: none;
   }
 
   .star.locked .dot {
-    background: #3d3442;
-    opacity: 0.45;
+    background: transparent;
+    opacity: 0.3;
     animation: none;
-    transform: scale(0.82);
+    transform: scale(0.84);
   }
 
   .star:not(.lit):not(.locked):not(.empty):hover { transform: scale(1.22); }
+
+  /* ---- 随机波动：仅未点亮可点亮星，周期性短促亮起，引导点击 ---- */
+  .star.wave:not(.lit):not(.locked):not(.empty)::before {
+    background: linear-gradient(160deg, #d6cede 0%, var(--star-gray) 100%);
+    animation: wave-breathe 1.15s ease-out;
+  }
+
+  .star.wave:not(.lit):not(.locked):not(.empty) {
+    filter: drop-shadow(0 0 9px rgba(232, 165, 176, 0.55));
+  }
+
+  @keyframes wave-breathe {
+    0% { opacity: 0.5; }
+    38% { opacity: 1; }
+    100% { opacity: 0.68; }
+  }
 
   .star.burst .spark { animation: burst 0.9s ease-out forwards; }
 
@@ -1047,20 +993,22 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.001ms !important;
     }
-    .star::after { display: none; }
-    .star:not(.lit) .dot { opacity: 0.85; transform: scale(1); }
     .star.lit { animation: none; }
+    .star:not(.lit):not(.locked):not(.empty)::before { animation: none; opacity: 0.8; }
+    .star.wave { filter: none !important; }
+    .star.wave::before {
+      animation: none !important;
+      background: linear-gradient(160deg, var(--star-gray) 0%, var(--star-gray-deep) 100%) !important;
+    }
     .card-body .ch { opacity: 1 !important; filter: none !important; transform: none !important; }
     .reply-zone { opacity: 1 !important; transform: none !important; }
     .finale-stars, .ascend-sparks, .galaxy-fog { display: none; }
-    .starfield .bg-star, .sky-bg-star { animation: none; opacity: var(--o, 0.3); }
     .ascend-text { opacity: 1 !important; transform: none !important; }
   }
 </style>
 </head>
 <body>
 
-<div class="starfield" id="starfield" aria-hidden="true"></div>
 
 <div class="admin-bar" id="adminBar">
   <button class="admin-btn" id="resetBtn">重置进度</button>
@@ -1124,33 +1072,7 @@
 
   <div class="sky-wrap">
     <div class="sky" id="sky">
-      <svg class="sky-deco" viewBox="0 0 100 100" aria-hidden="true">
-        <defs>
-          <path id="dHeart" d="M0 4.6 C -6 0.4 -7.4 -4.6 -3.8 -4.6 C -1.5 -4.6 0 -2.6 0 -2.6 C 0 -2.6 1.5 -4.6 3.8 -4.6 C 7.4 -4.6 6 0.4 0 4.6 Z"/>
-          <path id="dCross" d="M0 -6 L1.15 -1.15 L6 0 L1.15 1.15 L0 6 L-1.15 1.15 L-6 0 L-1.15 -1.15 Z"/>
-        </defs>
-        <use href="#dCross" class="deco-cross" transform="translate(13 17) scale(0.62)"/>
-        <use href="#dCross" class="deco-cross soft" transform="translate(88 27) scale(0.5)"/>
-        <use href="#dCross" class="deco-cross" transform="translate(83 82) scale(0.55)"/>
-        <use href="#dCross" class="deco-cross soft" transform="translate(17 80) scale(0.46)"/>
-        <use href="#dCross" class="deco-cross" transform="translate(52 9) scale(0.42)"/>
-        <use href="#dHeart" class="deco-heart" transform="translate(9 50) scale(1.15)"/>
-        <use href="#dHeart" class="deco-heart deep" transform="translate(91 55) scale(0.95)"/>
-        <use href="#dHeart" class="deco-heart" transform="translate(27 90) scale(0.9)"/>
-      </svg>
-      <div class="moon"></div>
-      <svg class="kitty-corner tl" width="52" height="46" viewBox="0 0 46 40">
-        <ellipse cx="23" cy="23" rx="16" ry="13" fill="#f4c2c2" opacity="0.5"/>
-        <path d="M9 13 L11 3 L18 10 Z" fill="#f4c2c2" opacity="0.5"/>
-        <path d="M37 13 L35 3 L28 10 Z" fill="#f4c2c2" opacity="0.5"/>
-        <path d="M18 12 Q17 6 22 7 Q27 6 26 12 Q22 15 18 12 Z" fill="#d98c99" opacity="0.6"/>
-      </svg>
-      <svg class="kitty-corner br" width="46" height="40" viewBox="0 0 46 40">
-        <ellipse cx="23" cy="23" rx="16" ry="13" fill="#f4c2c2" opacity="0.45"/>
-        <path d="M9 13 L11 3 L18 10 Z" fill="#f4c2c2" opacity="0.45"/>
-        <path d="M37 13 L35 3 L28 10 Z" fill="#f4c2c2" opacity="0.45"/>
-        <path d="M18 12 Q17 6 22 7 Q27 6 26 12 Q22 15 18 12 Z" fill="#d98c99" opacity="0.55"/>
-      </svg>
+      <div class="hint" id="hint">点点这些灰色小星星，会有惊喜哦 ✨</div>
     </div>
   </div>
 
@@ -1321,64 +1243,51 @@ function rand(seed) {
   return x - Math.floor(x);
 }
 
-/* 全屏细密星点（200+ 颗，含明暗与闪烁变化） */
-function buildStarfield() {
-  const field = document.getElementById('starfield');
-  if (!field) return;
-  const n = prefersReduced() ? 150 : 240;
-  const frag = document.createDocumentFragment();
-  for (let i = 0; i < n; i++) {
-    const s = document.createElement('span');
-    const isCross = i % 9 === 0;
-    s.className = 'bg-star';
-    const sz = isCross
-      ? (3 + rand(i * 4.2) * 1.5).toFixed(2)
-      : (0.8 + rand(i * 1.37) * 0.8).toFixed(2);
-    s.style.width = sz + 'px';
-    s.style.height = sz + 'px';
-    s.style.left = (rand(i * 2.71) * 100).toFixed(2) + '%';
-    s.style.top = (rand(i * 3.91) * 100).toFixed(2) + '%';
-    const o = (0.15 + rand(i * 5.7) * 0.25) * (isCross ? 0.85 : 1);
-    s.style.setProperty('--o', o.toFixed(2));
-    s.style.opacity = o.toFixed(2);
-    if (isCross) s.classList.add('mini-cross');
-    if (i % 4 === 0) {
-      s.classList.add('twinkle');
-      s.style.setProperty('--tw', (3 + rand(i * 7.1) * 5).toFixed(1) + 's');
-      s.style.animationDelay = (rand(i * 9.3) * 5).toFixed(2) + 's';
-    }
-    frag.appendChild(s);
-  }
-  field.appendChild(frag);
+/* 随机星星波动：周期性挑几颗未点亮的可点亮星短促亮起，引导点击 */
+let waveTimer = null;
+
+function waveTargets() {
+  return Object.values(starEls).filter(el =>
+    !el.classList.contains('lit') &&
+    !el.classList.contains('locked') &&
+    !el.classList.contains('empty')
+  );
 }
 
-/* 星空面板内补充星点，增强浩瀚感 */
-function buildSkyStars() {
-  const n = prefersReduced() ? 70 : 110;
-  const frag = document.createDocumentFragment();
-  for (let i = 0; i < n; i++) {
-    const s = document.createElement('span');
-    const isCross = i % 7 === 0;
-    s.className = 'sky-bg-star';
-    const sz = isCross
-      ? (2.5 + rand(i * 4.6) * 1.4).toFixed(2)
-      : (0.8 + rand(i * 1.61) * 0.8).toFixed(2);
-    s.style.width = sz + 'px';
-    s.style.height = sz + 'px';
-    s.style.left = (rand(i * 2.13) * 100).toFixed(2) + '%';
-    s.style.top = (rand(i * 3.47) * 100).toFixed(2) + '%';
-    const o = (0.15 + rand(i * 6.1) * 0.23) * (isCross ? 0.85 : 1);
-    s.style.opacity = o.toFixed(2);
-    if (isCross) s.classList.add('mini-cross');
-    if (i % 3 === 0) {
-      s.classList.add('twinkle');
-      s.style.setProperty('--o', o.toFixed(2));
-      s.style.setProperty('--tw', (3 + rand(i * 7.7) * 5).toFixed(1) + 's');
-      s.style.animationDelay = (rand(i * 9.9) * 5).toFixed(2) + 's';
-    }
-    frag.appendChild(s);
+function pulseWave() {
+  const list = waveTargets();
+  if (!list.length) return;
+  const count = Math.min(list.length, 2 + Math.floor(Math.random() * 2));
+  for (let i = 0; i < count; i++) {
+    const el = list[Math.floor(Math.random() * list.length)];
+    if (!el || el.classList.contains('wave')) continue;
+    el.classList.add('wave');
+    setTimeout(() => el.classList.remove('wave'), 1250);
   }
-  sky.appendChild(frag);
+}
+
+function startStarWaves() {
+  if (prefersReduced()) return;
+  clearInterval(waveTimer);
+  waveTimer = setInterval(pulseWave, 1500);
+}
+
+/* 首次访问引导提示：仅首次显示，数秒后淡出 */
+function hideHint() {
+  const h = document.getElementById('hint');
+  if (h) h.classList.remove('show');
+}
+
+function maybeShowHint() {
+  let seen = false;
+  try { seen = localStorage.getItem('wish-star-visited') === '1'; } catch (e) {}
+  if (seen) return;
+  const h = document.getElementById('hint');
+  if (!h) return;
+  try { localStorage.setItem('wish-star-visited', '1'); } catch (e) {}
+  requestAnimationFrame(() => h.classList.add('show'));
+  setTimeout(hideHint, 6000);
+  h.addEventListener('click', hideHint);
 }
 
 function buildSky() {
@@ -1425,6 +1334,7 @@ function buildSky() {
    点亮逻辑
    ============================================================ */
 function onStarClick(num, btn) {
+  hideHint();
   if (state.lit.includes(num)) { openCard(num); return; }
   if (state.lit.length >= CONFIG.TOTAL) { showToast('全部的星星都已经点亮啦 ✨'); return; }
   if (isCoolingDown()) { showToast('星光还在凝聚，稍等一会儿再点亮下一颗吧 ✨'); return; }
@@ -1882,13 +1792,13 @@ function setupAdmin() {
    ============================================================ */
 (async function init() {
   await loadRecords();
-  buildStarfield();
   buildSky();
-  buildSkyStars();
   updateProgress();
   updateBottle();
   updateCooldownUI();
   setupAdmin();
+  maybeShowHint();
+  startStarWaves();
 })();
 </script>
 </body>
