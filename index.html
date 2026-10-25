@@ -10,9 +10,10 @@
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   :root {
-    --night-1: #17092b;
-    --night-2: #33173a;
-    --night-3: #542a4b;
+    --night-1: #0a0618;
+    --night-2: #1a0b2e;
+    --night-3: #2d1650;
+    --star-shape: polygon(50% 0%, 65% 30%, 98% 35%, 74% 58%, 79% 90%, 50% 75%, 21% 90%, 26% 58%, 2% 35%, 35% 30%);
     --star-dim: #6d5a80;
     --star-glow: #ffb6c1;
     --star-bright: #fff6fa;
@@ -32,7 +33,7 @@
   }
 
   body {
-    background: linear-gradient(170deg, var(--night-1) 0%, var(--night-2) 45%, var(--night-3) 100%);
+    background: linear-gradient(165deg, var(--night-1) 0%, var(--night-2) 48%, var(--night-3) 100%);
     color: #fff;
     display: flex;
     align-items: center;
@@ -45,10 +46,40 @@
     position: fixed;
     inset: 0;
     background:
-      radial-gradient(circle at 20% 15%, rgba(255, 119, 176, 0.18) 0%, transparent 45%),
-      radial-gradient(circle at 82% 78%, rgba(255, 82, 150, 0.14) 0%, transparent 42%);
+      linear-gradient(112deg, transparent 26%, rgba(255, 214, 233, 0.14) 45%, rgba(178, 150, 255, 0.22) 54%, rgba(255, 182, 193, 0.12) 63%, transparent 80%),
+      radial-gradient(ellipse 62% 42% at 22% 18%, rgba(255, 119, 176, 0.16) 0%, transparent 62%),
+      radial-gradient(ellipse 52% 44% at 82% 80%, rgba(160, 130, 255, 0.16) 0%, transparent 64%),
+      radial-gradient(ellipse 90% 30% at 50% 52%, rgba(255, 214, 233, 0.05) 0%, transparent 72%);
     pointer-events: none;
     z-index: 0;
+  }
+
+  /* ===== 全屏细密星点层（JS 生成 200+ 颗） ===== */
+  .starfield {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .starfield .bg-star,
+  .sky-bg-star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 4px rgba(255, 246, 250, 0.7);
+    pointer-events: none;
+  }
+
+  .sky-bg-star { z-index: 0; }
+
+  .starfield .bg-star.twinkle,
+  .sky-bg-star.twinkle { animation: star-twinkle var(--tw, 4s) ease-in-out infinite; }
+
+  @keyframes star-twinkle {
+    0%, 100% { opacity: var(--o, 0.5); }
+    50% { opacity: 1; }
   }
 
   .app {
@@ -128,9 +159,24 @@
     max-height: 100%;
     border-radius: 24px;
     background:
-      radial-gradient(circle at 50% 40%, rgba(255, 119, 176, 0.10) 0%, transparent 60%),
-      rgba(255, 255, 255, 0.015);
-    border: 1px solid rgba(255, 182, 193, 0.10);
+      radial-gradient(circle at 50% 42%, rgba(255, 119, 176, 0.12) 0%, transparent 62%),
+      radial-gradient(ellipse 68% 52% at 70% 28%, rgba(160, 130, 255, 0.12) 0%, transparent 66%),
+      linear-gradient(165deg, rgba(10, 6, 24, 0.32) 0%, rgba(26, 11, 46, 0.5) 100%);
+    border: 1px solid rgba(255, 182, 193, 0.13);
+    box-shadow: inset 0 0 70px rgba(45, 22, 80, 0.55), 0 0 40px rgba(10, 6, 24, 0.5);
+  }
+
+  /* 星空内斜向银河光带 */
+  .sky::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(112deg, transparent 30%, rgba(255, 214, 233, 0.16) 46%, rgba(178, 150, 255, 0.20) 55%, rgba(255, 182, 193, 0.10) 64%, transparent 80%);
+    filter: blur(10px);
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: 0;
   }
 
   .moon {
@@ -161,8 +207,8 @@
   /* 星星 */
   .star {
     position: absolute;
-    width: 22px; height: 22px;
-    margin: -11px 0 0 -11px;
+    width: 24px; height: 24px;
+    margin: -12px 0 0 -12px;
     border: none;
     background: transparent;
     cursor: pointer;
@@ -171,23 +217,26 @@
     transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
+  /* 五角星形状（clip-path 星形，圆润饱满） */
   .star .dot {
     position: absolute;
     inset: 0;
-    border-radius: 50%;
-    background: var(--star-dim);
+    background: radial-gradient(circle at 50% 42%, #b79ecb 0%, var(--star-dim) 78%);
     opacity: 0.85;
     transition: all 0.45s ease;
+    -webkit-clip-path: var(--star-shape);
+    clip-path: var(--star-shape);
   }
 
   .star .spark {
     position: absolute;
     inset: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle, #fff 0%, var(--star-glow) 40%, transparent 70%);
+    background: radial-gradient(circle, #fff 0%, var(--star-glow) 42%, transparent 72%);
     opacity: 0;
     transform: scale(0.3);
     transition: all 0.5s ease;
+    -webkit-clip-path: var(--star-shape);
+    clip-path: var(--star-shape);
   }
 
   .star:not(.lit) .dot { animation: dim-pulse 3.2s ease-in-out infinite; animation-delay: var(--d, 0s); }
@@ -198,9 +247,12 @@
   }
 
   .star.lit .dot {
-    background: var(--star-bright);
-    box-shadow: 0 0 14px var(--pink-soft), 0 0 26px var(--pink-mist);
+    background: linear-gradient(150deg, #fff6fa 0%, #ffe3ee 46%, var(--pink-soft) 100%);
     opacity: 1;
+  }
+
+  .star.lit {
+    filter: drop-shadow(0 0 6px var(--pink-soft)) drop-shadow(0 0 15px var(--pink));
   }
 
   .star.lit .spark { opacity: 0.9; transform: scale(2.4); }
@@ -211,7 +263,7 @@
     50% { transform: translateY(-3px); }
   }
 
-  .star.empty { cursor: default; pointer-events: none; }
+  .star.empty { cursor: default; }
   .star.empty .dot {
     background: rgba(255, 255, 255, 0.08);
     box-shadow: none;
@@ -260,7 +312,7 @@
 
   /* ===== 底部冷却栏 ===== */
   .cooldown-bar {
-    border-radius: 16px;
+    border-radius: 18px;
     padding: 12px 16px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 182, 193, 0.14);
@@ -373,7 +425,7 @@
     max-height: 86vh;
     overflow-y: auto;
     overflow-x: hidden;
-    border-radius: 22px;
+    border-radius: 24px;
     padding: 30px 26px 24px;
     background: var(--card);
     color: var(--ink);
@@ -463,7 +515,7 @@
   .reply-existing {
     margin-bottom: 10px;
     padding: 12px 14px;
-    border-radius: 12px;
+    border-radius: 14px;
     background: linear-gradient(135deg, rgba(255, 217, 232, 0.55), rgba(255, 252, 254, 0.9));
     border: 1px dashed rgba(255, 61, 139, 0.3);
   }
@@ -504,7 +556,7 @@
     width: 100%;
     min-height: 74px;
     resize: vertical;
-    border-radius: 12px;
+    border-radius: 14px;
     border: 1px solid rgba(255, 61, 139, 0.28);
     background: rgba(255, 255, 255, 0.85);
     padding: 11px 13px;
@@ -529,7 +581,7 @@
 
   .reply-btn {
     border: none;
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 10px 22px;
     font-size: 13px;
     font-weight: 800;
@@ -638,12 +690,14 @@
   .g-star .g-dot {
     position: absolute;
     inset: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle, #fff 0%, var(--pink-soft) 45%, transparent 72%);
-    box-shadow: 0 0 12px var(--pink-soft), 0 0 26px rgba(255, 182, 193, 0.55);
+    background: radial-gradient(circle, #fff 0%, #ffe3ee 40%, var(--pink-soft) 78%, transparent 100%);
     animation: g-float 4s ease-in-out infinite;
     animation-delay: var(--d, 0s);
+    -webkit-clip-path: var(--star-shape);
+    clip-path: var(--star-shape);
   }
+
+  .g-star { filter: drop-shadow(0 0 7px var(--pink-soft)) drop-shadow(0 0 15px rgba(255, 182, 193, 0.6)); }
 
   @keyframes g-float {
     0%, 100% { transform: scale(1); opacity: 0.9; }
@@ -897,11 +951,14 @@
     .card-body .ch { opacity: 1 !important; filter: none !important; transform: none !important; }
     .reply-zone { opacity: 1 !important; transform: none !important; }
     .finale-stars, .ascend-sparks, .galaxy-fog { display: none; }
+    .starfield .bg-star, .sky-bg-star { animation: none; opacity: var(--o, 0.5); }
     .ascend-text { opacity: 1 !important; transform: none !important; }
   }
 </style>
 </head>
 <body>
+
+<div class="starfield" id="starfield" aria-hidden="true"></div>
 
 <div class="admin-bar" id="adminBar">
   <button class="admin-btn" id="resetBtn">重置进度</button>
@@ -955,7 +1012,7 @@
       </svg>
     </div>
     <h1 class="app-title">敏老师和璇老师的100颗回忆星</h1>
-    <p class="app-sub">100 天 · 100 个瞬间 · 点亮属于我们的星光</p>
+    <p class="app-sub">100天 · 100个瞬间 · 点亮属于我们的回忆</p>
     <div class="progress">
       <span class="num" id="progressNum">0</span>
       <span>/ 100 已点亮</span>
@@ -1148,6 +1205,58 @@ function rand(seed) {
   return x - Math.floor(x);
 }
 
+/* 全屏细密星点（200+ 颗，含明暗与闪烁变化） */
+function buildStarfield() {
+  const field = document.getElementById('starfield');
+  if (!field) return;
+  const n = prefersReduced() ? 150 : 240;
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement('span');
+    s.className = 'bg-star';
+    const sz = (0.8 + rand(i * 1.37) * 1.6).toFixed(2);
+    s.style.width = sz + 'px';
+    s.style.height = sz + 'px';
+    s.style.left = (rand(i * 2.71) * 100).toFixed(2) + '%';
+    s.style.top = (rand(i * 3.91) * 100).toFixed(2) + '%';
+    const o = 0.22 + rand(i * 5.7) * 0.62;
+    s.style.setProperty('--o', o.toFixed(2));
+    s.style.opacity = o.toFixed(2);
+    if (i % 4 === 0) {
+      s.classList.add('twinkle');
+      s.style.setProperty('--tw', (3 + rand(i * 7.1) * 5).toFixed(1) + 's');
+      s.style.animationDelay = (rand(i * 9.3) * 5).toFixed(2) + 's';
+    }
+    frag.appendChild(s);
+  }
+  field.appendChild(frag);
+}
+
+/* 星空面板内补充星点，增强浩瀚感 */
+function buildSkyStars() {
+  const n = prefersReduced() ? 70 : 110;
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement('span');
+    s.className = 'sky-bg-star';
+    const sz = (0.8 + rand(i * 1.61) * 1.5).toFixed(2);
+    s.style.width = sz + 'px';
+    s.style.height = sz + 'px';
+    s.style.left = (rand(i * 2.13) * 100).toFixed(2) + '%';
+    s.style.top = (rand(i * 3.47) * 100).toFixed(2) + '%';
+    const o = 0.2 + rand(i * 6.1) * 0.6;
+    s.style.opacity = o.toFixed(2);
+    if (i % 3 === 0) {
+      s.classList.add('twinkle');
+      s.style.setProperty('--o', o.toFixed(2));
+      s.style.setProperty('--tw', (3 + rand(i * 7.7) * 5).toFixed(1) + 's');
+      s.style.animationDelay = (rand(i * 9.9) * 5).toFixed(2) + 's';
+    }
+    frag.appendChild(s);
+  }
+  sky.appendChild(frag);
+}
+
 function buildSky() {
   for (let i = 0; i < CONFIG.TOTAL; i++) {
     const num = String(i + 1).padStart(2, '0');
@@ -1158,6 +1267,7 @@ function buildSky() {
 
     const btn = document.createElement('button');
     btn.className = 'star' + (RECORDS[num] ? '' : ' empty');
+    if (!RECORDS[num]) { btn.title = '待补充空位'; btn.setAttribute('aria-label', '待补充空位'); }
     btn.style.left = x + '%';
     btn.style.top = y + '%';
     btn.style.setProperty('--d', (rand(i * 5.1) * 3).toFixed(2) + 's');
@@ -1648,7 +1758,9 @@ function setupAdmin() {
    ============================================================ */
 (async function init() {
   await loadRecords();
+  buildStarfield();
   buildSky();
+  buildSkyStars();
   updateProgress();
   updateBottle();
   updateCooldownUI();
