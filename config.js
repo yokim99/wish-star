@@ -17,14 +17,8 @@ window.WISH_STAR_CONFIG = {
   DAILY_UNLOCK_MODE: false,
 
   /* 按天解锁模式下，每天可点亮的数量上限 */
-  DAILY_UNLOCK_COUNT: 5,
+  DAILY_UNLOCK_COUNT: 5
 
-  /* 大模型情话（OpenAI 兼容协议） */
-  AI: {
-    ENABLED: true,
-    BASE_URL: 'https://api.deepseek.com/v1', // OpenAI 兼容地址（末尾不要带 /）
-    MODEL: 'deepseek-chat',
-    API_KEY: '',                             // 由用户填入；为空则自动走本地兜底文案
-    TIMEOUT_MS: 3000                         // 超时（毫秒），超时即回退兜底
-  }
+  /* 说明：原「AI 生成情话回信」能力已按要求下线，
+     卡片只展示 records.json 中的素材原文，不再自动生成任何内容。 */
 };
