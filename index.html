@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#17092b">
+<title>我们的 100 颗许愿星</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --night-1: #17092b;
+    --night-2: #33173a;
+    --night-3: #542a4b;
+    --star-dim: #6d5a80;
+    --star-glow: #ffb6c1;
+    --star-bright: #fff6fa;
+    --pink: #ff77b0;
+    --pink-deep: #ff3d8b;
+    --pink-soft: #ffd9e8;
+    --pink-mist: rgba(255, 182, 193, 0.35);
+    --card: rgba(255, 252, 254, 0.94);
+    --ink: #4a2b3d;
+    --ink-soft: #8a6a7d;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    overflow: hidden;
+  }
+
+  body {
+    background: linear-gradient(170deg, var(--night-1) 0%, var(--night-2) 45%, var(--night-3) 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(255, 119, 176, 0.18) 0%, transparent 45%),
+      radial-gradient(circle at 82% 78%, rgba(255, 82, 150, 0.14) 0%, transparent 42%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 520px;
+    height: 100%;
+    max-height: 940px;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 18px 14px;
+  }
+
+  /* ===== 顶部标题 ===== */
+  .app-header { text-align: center; position: relative; padding-bottom: 6px; }
+
+  .kitty-badge { width: 46px; height: 40px; margin: 0 auto 10px; position: relative; }
+  .kitty-face-svg { display: block; }
+
+  .app-title {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #fff 0%, var(--pink-soft) 50%, #fff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+
+  .app-sub { font-size: 11.5px; color: rgba(255, 255, 255, 0.5); letter-spacing: 0.5px; }
+
+  /* ===== 进度 ===== */
+  .progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.62);
+  }
+
+  .progress .num {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--pink-soft);
+    text-shadow: 0 0 16px rgba(255, 182, 193, 0.8);
+  }
+
+  .progress .track {
+    width: 120px; height: 5px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.12);
+    overflow: hidden;
+    margin-left: 6px;
+  }
+
+  .progress .fill {
+    display: block;
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--pink), var(--pink-soft));
+    box-shadow: 0 0 10px var(--pink-mist);
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* ===== 星空 ===== */
+  .sky-wrap { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; margin: 10px 0; }
+
+  .sky {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    max-height: 100%;
+    border-radius: 24px;
+    background:
+      radial-gradient(circle at 50% 40%, rgba(255, 119, 176, 0.10) 0%, transparent 60%),
+      rgba(255, 255, 255, 0.015);
+    border: 1px solid rgba(255, 182, 193, 0.10);
+  }
+
+  .moon {
+    position: absolute;
+    top: -14px; right: 6px;
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 32%, #fff7fb 0%, #ffd9e8 55%, #ffb6c1 100%);
+    box-shadow: 0 0 34px rgba(255, 214, 230, 0.55), 0 0 70px rgba(255, 182, 193, 0.3);
+    opacity: 0.9;
+    z-index: 2;
+  }
+
+  .moon::after {
+    content: '';
+    position: absolute;
+    top: 12px; left: -8px;
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    background: var(--night-2);
+    opacity: 0.92;
+  }
+
+  .kitty-corner { position: absolute; z-index: 2; opacity: 0.55; pointer-events: none; }
+  .kitty-corner.tl { top: 10px; left: 10px; transform: rotate(-8deg); }
+  .kitty-corner.br { bottom: 12px; right: 12px; transform: rotate(10deg); }
+
+  /* 星星 */
+  .star {
+    position: absolute;
+    width: 22px; height: 22px;
+    margin: -11px 0 0 -11px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    z-index: 3;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .star .dot {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--star-dim);
+    opacity: 0.85;
+    transition: all 0.45s ease;
+  }
+
+  .star .spark {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 0%, var(--star-glow) 40%, transparent 70%);
+    opacity: 0;
+    transform: scale(0.3);
+    transition: all 0.5s ease;
+  }
+
+  .star:not(.lit) .dot { animation: dim-pulse 3.2s ease-in-out infinite; animation-delay: var(--d, 0s); }
+
+  @keyframes dim-pulse {
+    0%, 100% { opacity: 0.45; transform: scale(0.85); }
+    50% { opacity: 0.95; transform: scale(1); }
+  }
+
+  .star.lit .dot {
+    background: var(--star-bright);
+    box-shadow: 0 0 14px var(--pink-soft), 0 0 26px var(--pink-mist);
+    opacity: 1;
+  }
+
+  .star.lit .spark { opacity: 0.9; transform: scale(2.4); }
+  .star.lit { animation: lit-float 4s ease-in-out infinite; animation-delay: var(--d, 0s); }
+
+  @keyframes lit-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+
+  .star.empty { cursor: default; pointer-events: none; }
+  .star.empty .dot {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: none;
+    animation: none;
+    opacity: 0.5;
+  }
+
+  .star.locked { cursor: not-allowed; }
+  .star.locked .dot {
+    background: var(--star-dim);
+    opacity: 0.3;
+    animation: none;
+    transform: scale(0.8);
+  }
+
+  .star:not(.lit):not(.locked):not(.empty):hover { transform: scale(1.35); }
+
+  .star.burst .spark { animation: burst 0.9s ease-out forwards; }
+
+  @keyframes burst {
+    0% { opacity: 1; transform: scale(0.4); }
+    60% { opacity: 1; transform: scale(3.4); }
+    100% { opacity: 0; transform: scale(4.2); }
+  }
+
+  .ray {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 2px; height: 22px;
+    margin-left: -1px;
+    background: linear-gradient(to bottom, var(--pink-soft), transparent);
+    border-radius: 2px;
+    transform-origin: top center;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  .star.brigade .ray { animation: ray-out 0.8s ease-out forwards; }
+
+  @keyframes ray-out {
+    0% { opacity: 0; transform: rotate(var(--a)) translateY(0) scaleY(0.3); }
+    40% { opacity: 1; }
+    100% { opacity: 0; transform: rotate(var(--a)) translateY(var(--dist, 34px)) scaleY(1.6); }
+  }
+
+  /* ===== 底部冷却栏 ===== */
+  .cooldown-bar {
+    border-radius: 16px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 182, 193, 0.14);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 62px;
+    transition: background 0.4s;
+  }
+
+  .cd-icon { font-size: 20px; line-height: 1; }
+  .cd-text { flex: 1; }
+  .cd-title { font-size: 12.5px; font-weight: 700; color: var(--pink-soft); margin-bottom: 2px; }
+  .cd-sub { font-size: 11px; color: rgba(255, 255, 255, 0.48); }
+
+  .cd-timer {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 1px;
+    min-width: 68px;
+    text-align: right;
+  }
+
+  .cd-timer.ready { color: var(--pink-soft); font-size: 15px; }
+  .cooldown-bar.ready { background: rgba(255, 182, 193, 0.12); }
+
+  /* ===== 记录卡片弹窗 ===== */
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(20, 8, 28, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .modal.show { display: flex; animation: fade-in 0.35s ease; }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+  .card {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 22px;
+    padding: 30px 26px 24px;
+    background: var(--card);
+    color: var(--ink);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 182, 193, 0.5), 0 0 44px rgba(255, 119, 176, 0.35);
+    animation: card-in 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+  }
+
+  @keyframes card-in {
+    from { opacity: 0; transform: scale(0.82) translateY(24px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 119, 176, 0.22) 0%, transparent 70%);
+  }
+
+  .card-num {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 2px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--pink) 0%, var(--pink-deep) 100%);
+    color: #fff;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 14px rgba(255, 61, 139, 0.4);
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-num .hash { font-size: 11px; opacity: 0.8; }
+
+  .card-body {
+    margin: 20px 0 18px;
+    font-size: 15.5px;
+    line-height: 1.85;
+    color: var(--ink);
+    letter-spacing: 0.2px;
+    position: relative;
+    z-index: 1;
+    min-height: 26px;
+  }
+
+  .card-body .ch { opacity: 0; animation: ch-in 0.4s ease forwards; }
+
+  @keyframes ch-in {
+    from { opacity: 0; transform: translateY(6px); filter: blur(3px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+
+  .card-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 61, 139, 0.25), transparent);
+    margin-bottom: 16px;
+  }
+
+  .ai-zone {
+    border-radius: 14px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, rgba(255, 217, 232, 0.55), rgba(255, 252, 254, 0.9));
+    border: 1px dashed rgba(255, 61, 139, 0.35);
+    position: relative;
+    z-index: 1;
+  }
+
+  .ai-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--pink-deep);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .ai-body { font-size: 13.5px; line-height: 1.7; color: var(--ink-soft); min-height: 22px; }
+
+  .ai-btn {
+    margin-top: 10px;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    box-shadow: 0 4px 12px rgba(255, 61, 139, 0.32);
+    transition: transform 0.2s;
+    font-family: inherit;
+  }
+
+  .ai-btn:active { transform: scale(0.96); }
+  .ai-btn[disabled] { opacity: 0.6; cursor: default; }
+
+  .card-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 61, 139, 0.1);
+    color: var(--pink-deep);
+    font-size: 17px;
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ===== 管理入口 ===== */
+  .admin-bar {
+    position: fixed;
+    top: 12px; right: 12px;
+    z-index: 60;
+    display: none;
+    gap: 8px;
+  }
+
+  .admin-bar.show { display: flex; }
+
+  .admin-btn {
+    border: 1px solid rgba(255, 182, 193, 0.4);
+    background: rgba(255, 61, 139, 0.18);
+    color: var(--pink-soft);
+    font-family: inherit;
+    font-size: 11.5px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+
+  .admin-btn:active { transform: scale(0.96); }
+
+  /* ===== 100 颗彩蛋 ===== */
+  .finale {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 45%, rgba(255, 119, 176, 0.22) 0%, rgba(23, 9, 43, 0.92) 70%);
+    animation: fade-in 0.6s ease;
+  }
+
+  .finale.show { display: flex; }
+
+  .finale-stars { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+
+  .finale-stars .fs {
+    position: absolute;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--star-bright);
+    box-shadow: 0 0 10px var(--pink-soft);
+    opacity: 0;
+    animation: fs-twinkle 2.6s ease-in-out infinite;
+  }
+
+  @keyframes fs-twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.4); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+
+  .finale-content { position: relative; z-index: 1; text-align: center; padding: 30px; max-width: 440px; animation: card-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .finale-kitty { width: 62px; height: 54px; margin: 0 auto 18px; }
+  .finale-text { font-size: 18px; line-height: 2; font-weight: 700; color: #fff; letter-spacing: 1px; text-shadow: 0 0 24px rgba(255, 182, 193, 0.85); }
+  .finale-close {
+    margin-top: 24px;
+    border: 1px solid rgba(255, 182, 193, 0.5);
+    background: rgba(255, 61, 139, 0.2);
+    color: var(--pink-soft);
+    font-family: inherit;
+    font-size: 13px;
+    padding: 10px 24px;
+    border-radius: 22px;
+    cursor: pointer;
+  }
+
+  /* ===== 轻提示 ===== */
+  .toast {
+    position: fixed;
+    bottom: 96px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    z-index: 120;
+    padding: 10px 20px;
+    border-radius: 24px;
+    font-size: 12.5px;
+    color: #fff;
+    background: rgba(255, 61, 139, 0.9);
+    box-shadow: 0 8px 24px rgba(255, 61, 139, 0.4);
+    opacity: 0;
+    transition: all 0.35s ease;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ===== 响应式 ===== */
+  @media (max-height: 720px) {
+    .app-header { padding-bottom: 2px; }
+    .kitty-badge { display: none; }
+    .app-title { font-size: 19px; }
+    .app { padding-top: 16px; }
+  }
+
+  @media (max-width: 380px) {
+    .app { padding: 16px 12px 12px; }
+    .app-title { font-size: 19px; letter-spacing: 1px; }
+    .card { padding: 26px 20px 20px; }
+    .card-body { font-size: 14.5px; }
+  }
+
+  @media (min-width: 768px) {
+    .app { max-width: 560px; }
+    .app-title { font-size: 24px; }
+  }
+
+  /* ===== 尊重减少动效 ===== */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+    .star:not(.lit) .dot { opacity: 0.8; transform: scale(1); }
+    .star.lit { animation: none; }
+    .card-body .ch { opacity: 1 !important; filter: none !important; transform: none !important; }
+    .finale-stars { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="admin-bar" id="adminBar">
+  <button class="admin-btn" id="resetBtn">重置进度</button>
+</div>
+
+<div class="app">
+  <header class="app-header">
+    <div class="kitty-badge">
+      <svg class="kitty-face-svg" width="46" height="40" viewBox="0 0 46 40" fill="none">
+        <ellipse cx="23" cy="23" rx="17" ry="14" fill="#fff" stroke="#ff77b0" stroke-width="1.5"/>
+        <path d="M8 12 L10 2 L17 9 Z" fill="#fff" stroke="#ff77b0" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M38 12 L36 2 L29 9 Z" fill="#fff" stroke="#ff77b0" stroke-width="1.5" stroke-linejoin="round"/>
+        <ellipse cx="16" cy="21" rx="1.8" ry="2.4" fill="#3a2233"/>
+        <ellipse cx="30" cy="21" rx="1.8" ry="2.4" fill="#3a2233"/>
+        <ellipse cx="23" cy="26" rx="2.4" ry="1.8" fill="#ffdf3d"/>
+        <path d="M18 12 Q17 6 22 7 Q27 6 26 12 Q22 15 18 12 Z" fill="#ff3d8b"/>
+        <circle cx="22" cy="9.5" r="1.6" fill="#fff" opacity="0.85"/>
+        <g stroke="#ff77b0" stroke-width="1.3" stroke-linecap="round" opacity="0.7">
+          <path d="M3 20 L11 22"/><path d="M3 26 L11 25"/>
+          <path d="M43 20 L35 22"/><path d="M43 26 L35 25"/>
+        </g>
+      </svg>
+    </div>
+    <h1 class="app-title">我们的 100 颗许愿星</h1>
+    <p class="app-sub">100 天 · 100 个瞬间 · 点亮属于我们的星光</p>
+    <div class="progress">
+      <span class="num" id="progressNum">0</span>
+      <span>/ 100 已点亮</span>
+      <span class="track"><span class="fill" id="progressFill"></span></span>
+    </div>
+  </header>
+
+  <div class="sky-wrap">
+    <div class="sky" id="sky">
+      <div class="moon"></div>
+      <svg class="kitty-corner tl" width="52" height="46" viewBox="0 0 46 40">
+        <ellipse cx="23" cy="23" rx="16" ry="13" fill="#ffd9e8" opacity="0.5"/>
+        <path d="M9 13 L11 3 L18 10 Z" fill="#ffd9e8" opacity="0.5"/>
+        <path d="M37 13 L35 3 L28 10 Z" fill="#ffd9e8" opacity="0.5"/>
+        <path d="M18 12 Q17 6 22 7 Q27 6 26 12 Q22 15 18 12 Z" fill="#ff3d8b" opacity="0.6"/>
+      </svg>
+      <svg class="kitty-corner br" width="46" height="40" viewBox="0 0 46 40">
+        <ellipse cx="23" cy="23" rx="16" ry="13" fill="#ffd9e8" opacity="0.45"/>
+        <path d="M9 13 L11 3 L18 10 Z" fill="#ffd9e8" opacity="0.45"/>
+        <path d="M37 13 L35 3 L28 10 Z" fill="#ffd9e8" opacity="0.45"/>
+        <path d="M18 12 Q17 6 22 7 Q27 6 26 12 Q22 15 18 12 Z" fill="#ff3d8b" opacity="0.55"/>
+      </svg>
+    </div>
+  </div>
+
+  <footer class="cooldown-bar" id="cooldownBar">
+    <div class="cd-icon">🌟</div>
+    <div class="cd-text">
+      <div class="cd-title" id="cdTitle">现在可以点亮一颗星星</div>
+      <div class="cd-sub" id="cdSub">轻触星空中任意一颗微光星</div>
+    </div>
+    <div class="cd-timer" id="cdTimer">00:00</div>
+  </footer>
+</div>
+
+<div class="modal" id="modal">
+  <div class="card">
+    <button class="card-close" id="cardClose">✕</button>
+    <span class="card-num"><span class="hash">#</span><span id="cardNum">01</span></span>
+    <div class="card-body" id="cardBody"></div>
+    <div class="card-divider"></div>
+    <div class="ai-zone">
+      <div class="ai-head">💗 AI 为你写一句话</div>
+      <div class="ai-body" id="aiBody">点一下，让 AI 根据这段回忆写句情话回应你</div>
+      <button class="ai-btn" id="aiBtn">生成情话回信</button>
+    </div>
+  </div>
+</div>
+
+<div class="finale" id="finale">
+  <div class="finale-stars" id="finaleStars"></div>
+  <div class="finale-content">
+    <svg class="finale-kitty" viewBox="0 0 46 40">
+      <ellipse cx="23" cy="23" rx="17" ry="14" fill="#fff" stroke="#ff77b0" stroke-width="1.5"/>
+      <path d="M8 12 L10 2 L17 9 Z" fill="#fff" stroke="#ff77b0" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M38 12 L36 2 L29 9 Z" fill="#fff" stroke="#ff77b0" stroke-width="1.5" stroke-linejoin="round"/>
+      <ellipse cx="16" cy="21" rx="1.8" ry="2.4" fill="#3a2233"/>
+      <ellipse cx="30" cy="21" rx="1.8" ry="2.4" fill="#3a2233"/>
+      <ellipse cx="23" cy="26" rx="2.4" ry="1.8" fill="#ffdf3d"/>
+      <path d="M18 12 Q17 6 22 7 Q27 6 26 12 Q22 15 18 12 Z" fill="#ff3d8b"/>
+    </svg>
+    <p class="finale-text">100 天，100 颗星，全都被你点亮了。<br>谢谢你，让我的每个平凡日子都住进了星光。</p>
+    <button class="finale-close" id="finaleClose">收下这份星光</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="./config.js"></script>
+<script>
+/* ============================================================
+   配置读取（config.js 优先，缺失时使用内置默认值）
+   ============================================================ */
+const CONFIG = Object.assign({
+  TOTAL: 100,
+  COOLDOWN_SECONDS: 300,
+  LOCK_OTHERS_DURING_CD: true,
+  DAILY_UNLOCK_MODE: false,
+  DAILY_UNLOCK_COUNT: 5,
+  AI: { ENABLED: true, BASE_URL: 'https://api.deepseek.com/v1', MODEL: 'deepseek-chat', API_KEY: '', TIMEOUT_MS: 3000 }
+}, window.WISH_STAR_CONFIG || {});
+CONFIG.AI = Object.assign({ ENABLED: true, BASE_URL: 'https://api.deepseek.com/v1', MODEL: 'deepseek-chat', API_KEY: '', TIMEOUT_MS: 3000 }, CONFIG.AI || {});
+
+/* ============================================================
+   内联兜底素材：file:// 下 fetch 失败时使用，与 records.json 保持一致
+   ============================================================ */
+const FALLBACK_RECORDS = {
+  "01": "我总喜欢说你是小狗，其实潜意识里是觉得可爱，深层上是觉得，我希望感情也是像小狗，因为小狗的爱最真诚，因为小狗要是爱你，就会一直爱你。",
+  "02": "你第一次牵我手的时候，掌心出了好多汗，却还装作若无其事的样子，我假装没发现，其实偷偷开心了一路。",
+  "07": "你送我盲盒开出隐藏款，和我一起买彩票各中了一次，我当时心想，我这人运气好吗，你不会是我的福星吧。",
+  "08": "你好喜欢夸我啊，你一夸我就忍不住想抱你，于是某一天我说，「那你要一直喜欢我」，你说，「是的，公主。」",
+  "09": "蛮神奇的，两个不相信永恒的人。",
+  "15": "我们窝在沙发上看完了整季剧，你睡着的时候还攥着我的手指，我舍不得动一下。",
+  "33": "你把我随口提过一次想吃的小店记在了备忘录里，周末什么也没说，就带我去了。",
+  "68": "下雨天你撑着伞，总往我这边偏，自己半边肩膀都湿透了，还说没事。",
+  "99": "第 99 天。翻着这些记录才发现，原来被你爱着的每一天，都在悄悄发光。",
+  "100": "第 100 天。谢谢你，把平凡的日子过成了星星。"
+};
+
+/* AI 兜底文案（无 API Key / 请求失败 / 超时时使用） */
+const AI_FALLBACK = [
+  "如果爱有形状，大概就是你笑起来的样子。",
+  "记得住这些小事的人，才是认真爱我的人。",
+  "我们的故事没有惊天动地，却每一句都想收藏。",
+  "遇到你以后，普通的一天也值得被点亮。",
+  "谢谢你，让我的日常里住进了一整个春天。",
+  "原来被人放在心上，是这么踏实又欢喜的事。"
+];
+
+/* ============================================================
+   素材加载：优先 records.json，失败则回退内联数据
+   ============================================================ */
+let RECORDS = {};
+
+async function loadRecords() {
+  let timer = null;
+  try {
+    const ctrl = new AbortController();
+    timer = setTimeout(() => ctrl.abort(), 2500);
+    const res = await fetch('./records.json', { cache: 'no-store', signal: ctrl.signal });
+    if (!res.ok) throw new Error('bad status ' + res.status);
+    const data = await res.json();
+    if (data && typeof data === 'object' && !Array.isArray(data)) {
+      RECORDS = data;
+      return;
+    }
+    throw new Error('bad data');
+  } catch (e) {
+    RECORDS = FALLBACK_RECORDS;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/* ============================================================
+   状态与存储
+   ============================================================ */
+const LS_KEY = 'wish-star-state-v1';
+let state = loadState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return { lit: [], lastLitAt: 0 };
+}
+
+function saveState() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+/* ============================================================
+   渲染星空
+   ============================================================ */
+const sky = document.getElementById('sky');
+const starEls = {};
+
+function rand(seed) {
+  const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
+  return x - Math.floor(x);
+}
+
+function buildSky() {
+  for (let i = 0; i < CONFIG.TOTAL; i++) {
+    const num = String(i + 1).padStart(2, '0');
+    const col = i % 10;
+    const row = Math.floor(i / 10);
+    const x = ((col + 0.5 + (rand(i * 2.3) - 0.5) * 0.55) / 10) * 100;
+    const y = ((row + 0.5 + (rand(i * 3.7) - 0.5) * 0.55) / 10) * 100;
+
+    const btn = document.createElement('button');
+    btn.className = 'star' + (RECORDS[num] ? '' : ' empty');
+    btn.style.left = x + '%';
+    btn.style.top = y + '%';
+    btn.style.setProperty('--d', (rand(i * 5.1) * 3).toFixed(2) + 's');
+    btn.dataset.num = num;
+
+    const dot = document.createElement('span');
+    dot.className = 'dot';
+    const spark = document.createElement('span');
+    spark.className = 'spark';
+    btn.appendChild(dot);
+    btn.appendChild(spark);
+
+    for (let r = 0; r < 8; r++) {
+      const ray = document.createElement('span');
+      ray.className = 'ray';
+      ray.style.setProperty('--a', (r * 45) + 'deg');
+      ray.style.setProperty('--dist', (26 + rand(i + r) * 14).toFixed(0) + 'px');
+      btn.appendChild(ray);
+    }
+
+    if (RECORDS[num]) {
+      btn.addEventListener('click', () => onStarClick(num, btn));
+    }
+    sky.appendChild(btn);
+    starEls[num] = btn;
+  }
+  state.lit.forEach(num => { if (starEls[num]) starEls[num].classList.add('lit'); });
+}
+
+/* ============================================================
+   点亮逻辑
+   ============================================================ */
+function onStarClick(num, btn) {
+  if (state.lit.includes(num)) { openCard(num); return; }
+  if (state.lit.length >= CONFIG.TOTAL) { showToast('全部的星星都已经点亮啦 ✨'); return; }
+  if (isCoolingDown()) { showToast('星光还在凝聚，稍等一会儿再点亮下一颗吧 ✨'); return; }
+  if (dailyBlocked()) { showToast('今天的星星已经点亮完啦，明天再来吧 ✨'); return; }
+
+  btn.classList.add('burst', 'brigade', 'lit');
+  playChime();
+  state.lit.push(num);
+  state.lastLitAt = Date.now();
+  markDaily();
+  saveState();
+  updateProgress();
+  updateCooldownUI();
+  setTimeout(() => openCard(num), 420);
+  setTimeout(() => btn.classList.remove('burst', 'brigade'), 1000);
+
+  if (state.lit.length >= CONFIG.TOTAL) setTimeout(triggerFinale, 1200);
+}
+
+function isCoolingDown() {
+  if (!state.lastLitAt) return false;
+  return (Date.now() - state.lastLitAt) < CONFIG.COOLDOWN_SECONDS * 1000;
+}
+
+function dailyBlocked() {
+  if (!CONFIG.DAILY_UNLOCK_MODE) return false;
+  const today = new Date().toDateString();
+  let rec = {};
+  try { rec = JSON.parse(localStorage.getItem(LS_KEY + '-daily') || '{}'); } catch (e) {}
+  if (rec.date !== today) return false;
+  return (rec.count || 0) >= CONFIG.DAILY_UNLOCK_COUNT;
+}
+
+function markDaily() {
+  if (!CONFIG.DAILY_UNLOCK_MODE) return;
+  const today = new Date().toDateString();
+  let rec = {};
+  try { rec = JSON.parse(localStorage.getItem(LS_KEY + '-daily') || '{}'); } catch (e) {}
+  if (rec.date !== today) rec = { date: today, count: 0 };
+  rec.count = (rec.count || 0) + 1;
+  try { localStorage.setItem(LS_KEY + '-daily', JSON.stringify(rec)); } catch (e) {}
+}
+
+function updateProgress() {
+  const n = state.lit.length;
+  document.getElementById('progressNum').textContent = n;
+  document.getElementById('progressFill').style.width = (n / CONFIG.TOTAL * 100) + '%';
+}
+
+/* ============================================================
+   冷却 UI
+   ============================================================ */
+let cdTimer = null;
+
+function updateCooldownUI() {
+  const bar = document.getElementById('cooldownBar');
+  const title = document.getElementById('cdTitle');
+  const sub = document.getElementById('cdSub');
+  const timer = document.getElementById('cdTimer');
+
+  if (isCoolingDown()) {
+    bar.classList.remove('ready');
+    timer.classList.remove('ready');
+    title.textContent = '星光正在凝聚…';
+    sub.textContent = '下一颗星星点亮倒计时';
+    if (CONFIG.LOCK_OTHERS_DURING_CD) lockStars(true);
+
+    clearInterval(cdTimer);
+    const tick = () => {
+      const remain = CONFIG.COOLDOWN_SECONDS * 1000 - (Date.now() - state.lastLitAt);
+      if (remain <= 0) { clearInterval(cdTimer); updateCooldownUI(); return; }
+      timer.textContent = fmt(remain);
+    };
+    tick();
+    cdTimer = setInterval(tick, 250);
+  } else {
+    clearInterval(cdTimer);
+    bar.classList.add('ready');
+    timer.classList.add('ready');
+    timer.textContent = 'READY';
+    title.textContent = '现在可以点亮一颗星星';
+    sub.textContent = '轻触星空中任意一颗微光星';
+    lockStars(false);
+  }
+}
+
+function lockStars(lock) {
+  Object.values(starEls).forEach(el => {
+    if (el.classList.contains('lit') || el.classList.contains('empty')) return;
+    el.classList.toggle('locked', lock);
+  });
+}
+
+function fmt(ms) {
+  if (ms < 0) ms = 0;
+  const s = Math.ceil(ms / 1000);
+  return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+}
+
+/* ============================================================
+   记录卡片
+   ============================================================ */
+let currentNum = null;
+
+function openCard(num) {
+  currentNum = num;
+  document.getElementById('cardNum').textContent = num;
+  const body = document.getElementById('cardBody');
+  body.innerHTML = '';
+  const text = RECORDS[num] || '';
+  text.split('').forEach((ch, i) => {
+    const span = document.createElement('span');
+    span.className = 'ch';
+    span.textContent = ch;
+    span.style.animationDelay = (i * 0.028) + 's';
+    body.appendChild(span);
+  });
+
+  const aiBody = document.getElementById('aiBody');
+  const aiBtn = document.getElementById('aiBtn');
+  aiBody.textContent = '点一下，让 AI 根据这段回忆写句情话回应你';
+  aiBtn.disabled = false;
+  aiBtn.style.display = CONFIG.AI.ENABLED ? 'inline-block' : 'none';
+  document.getElementById('modal').classList.add('show');
+}
+
+function closeCard() {
+  document.getElementById('modal').classList.remove('show');
+  currentNum = null;
+}
+
+/* ============================================================
+   AI 情话：调用大模型，失败/超时/未配置一律走兜底
+   ============================================================ */
+function fallbackLine(num) {
+  const i = (Number(num) || 0) % AI_FALLBACK.length;
+  return AI_FALLBACK[i];
+}
+
+async function generateLove(num, text) {
+  const cfg = CONFIG.AI;
+  if (!cfg.ENABLED || !cfg.API_KEY) return fallbackLine(num);
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), cfg.TIMEOUT_MS || 3000);
+    const res = await fetch(cfg.BASE_URL.replace(/\/$/, '') + '/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + cfg.API_KEY
+      },
+      body: JSON.stringify({
+        model: cfg.MODEL,
+        temperature: 1.1,
+        max_tokens: 120,
+        messages: [
+          { role: 'system', content: '你是一位温柔浪漫的情话作者。请根据用户给出的这段恋人回忆，写一句真挚、不肉麻、有画面感的情话回信，40 字以内，不要加引号、不要用 emoji。' },
+          { role: 'user', content: '这段回忆是：' + text }
+        ]
+      }),
+      signal: ctrl.signal
+    });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error('http ' + res.status);
+    const data = await res.json();
+    const line = data && data.choices && data.choices[0] && data.choices[0].message
+      ? String(data.choices[0].message.content || '').trim()
+      : '';
+    return line || fallbackLine(num);
+  } catch (e) {
+    return fallbackLine(num);
+  }
+}
+
+document.getElementById('aiBtn').addEventListener('click', async () => {
+  const el = document.getElementById('aiBody');
+  const btn = document.getElementById('aiBtn');
+  const num = currentNum;
+  btn.disabled = true;
+  el.textContent = 'AI 正在想…';
+  const line = await generateLove(num, RECORDS[num] || '');
+  el.textContent = line;
+  btn.disabled = false;
+});
+
+document.getElementById('cardClose').addEventListener('click', closeCard);
+document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeCard(); });
+
+/* ============================================================
+   音效（Web Audio 合成轻柔三音阶铃音）
+   ============================================================ */
+let audioCtx = null;
+function playChime() {
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const now = audioCtx.currentTime;
+    [880, 1174, 1568].forEach((f, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = f;
+      gain.gain.setValueAtTime(0, now + i * 0.07);
+      gain.gain.linearRampToValueAtTime(0.12, now + i * 0.07 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.07 + 0.7);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(now + i * 0.07);
+      osc.stop(now + i * 0.07 + 0.75);
+    });
+  } catch (e) {}
+}
+
+/* ============================================================
+   100 颗彩蛋
+   ============================================================ */
+let finaleShown = false;
+function triggerFinale() {
+  if (finaleShown) return;
+  finaleShown = true;
+  const wrap = document.getElementById('finaleStars');
+  wrap.innerHTML = '';
+  for (let i = 0; i < 70; i++) {
+    const s = document.createElement('span');
+    s.className = 'fs';
+    s.style.left = (rand(i * 7.7) * 100).toFixed(2) + '%';
+    s.style.top = (rand(i * 9.1) * 100).toFixed(2) + '%';
+    s.style.animationDelay = (rand(i * 3.3) * 2.6).toFixed(2) + 's';
+    wrap.appendChild(s);
+  }
+  document.getElementById('finale').classList.add('show');
+}
+
+document.getElementById('finaleClose').addEventListener('click', () => {
+  document.getElementById('finale').classList.remove('show');
+});
+
+/* ============================================================
+   轻提示
+   ============================================================ */
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ============================================================
+   隐藏管理入口（?admin=1）
+   ============================================================ */
+function setupAdmin() {
+  const params = new URLSearchParams(location.search);
+  if (params.get('admin') !== '1') return;
+  const bar = document.getElementById('adminBar');
+  bar.classList.add('show');
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if (!confirm('确定要重置全部点亮进度吗？此操作不可撤销。')) return;
+    try { localStorage.removeItem(LS_KEY); localStorage.removeItem(LS_KEY + '-daily'); } catch (e) {}
+    location.reload();
+  });
+}
+
+/* ============================================================
+   初始化
+   ============================================================ */
+(async function init() {
+  await loadRecords();
+  buildSky();
+  updateProgress();
+  updateCooldownUI();
+  setupAdmin();
+})();
+</script>
+</body>
+</html>
