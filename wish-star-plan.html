@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>情侣 100 天纪念日许愿星 · 设计方案</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --pink: #ff77b0;
+    --pink-deep: #ff3d8b;
+    --pink-soft: #ffe3ef;
+    --pink-mist: #fff5fa;
+    --ink: #43303c;
+    --ink-soft: #7d6675;
+    --ink-mute: #a9959f;
+    --line: #f3dbe6;
+    --bg: #fff8fc;
+    --white: #fff;
+  }
+
+  body {
+    font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .doc { max-width: 880px; margin: 0 auto; background: var(--white); box-shadow: 0 0 60px rgba(255, 119, 176, 0.12); }
+
+  /* 封面 */
+  .cover {
+    position: relative;
+    padding: 64px 52px 56px;
+    background: linear-gradient(150deg, #2a1338 0%, #4d2247 55%, #7a3560 100%);
+    color: #fff;
+    overflow: hidden;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -40px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 119, 176, 0.35) 0%, transparent 70%);
+  }
+
+  .cover-tag {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 3px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: rgba(255, 182, 193, 0.16);
+    border: 1px solid rgba(255, 182, 193, 0.3);
+    color: var(--pink-soft);
+    margin-bottom: 22px;
+  }
+
+  .cover h1 {
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+
+  .cover h1 em {
+    font-style: normal;
+    background: linear-gradient(90deg, #ffd1e3, #ff77b0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .cover p { font-size: 14.5px; color: rgba(255, 255, 255, 0.66); max-width: 600px; }
+
+  .cover-meta {
+    margin-top: 28px;
+    display: flex;
+    gap: 28px;
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .cover-meta b { display: block; color: var(--pink-soft); font-size: 18px; font-weight: 800; margin-bottom: 2px; }
+
+  /* 内容区 */
+  .body-inner { padding: 8px 52px 64px; }
+
+  .sec { padding-top: 46px; }
+
+  .sec-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .sec-idx {
+    width: 34px; height: 34px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    color: #fff;
+    font-weight: 800;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 14px rgba(255, 61, 139, 0.3);
+  }
+
+  .sec h2 { font-size: 21px; font-weight: 800; letter-spacing: 0.5px; }
+
+  .sec-sub { font-size: 13px; color: var(--ink-mute); margin-bottom: 20px; }
+
+  p.para { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 14px; }
+  p.para strong { color: var(--pink-deep); font-weight: 700; }
+
+  /* 卡片 */
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    background: linear-gradient(180deg, #fffdfe, #fff7fb);
+  }
+
+  .card h3 {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card h3 .dot-mark { width: 7px; height: 7px; border-radius: 50%; background: var(--pink-deep); }
+
+  .card ul { list-style: none; }
+  .card li { font-size: 14px; color: var(--ink-soft); padding-left: 20px; position: relative; margin-bottom: 7px; }
+  .card li::before { content: '✦'; position: absolute; left: 2px; color: var(--pink); font-size: 11px; }
+  .card li b { color: var(--ink); font-weight: 700; }
+
+  /* 架构分层图 */
+  .arch {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .arch-row {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid var(--line);
+  }
+  .arch-row:last-child { border-bottom: none; }
+
+  .arch-label {
+    width: 116px;
+    flex-shrink: 0;
+    padding: 16px 14px;
+    background: linear-gradient(135deg, #fff0f7, #ffe3ef);
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--pink-deep);
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.5px;
+  }
+
+  .arch-body { flex: 1; padding: 15px 18px; background: #fff; }
+  .arch-body .t { font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
+  .arch-body .d { font-size: 12.5px; color: var(--ink-mute); line-height: 1.65; }
+
+  /* 表格 */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 13px; border-radius: 12px; overflow: hidden; }
+  thead th {
+    background: linear-gradient(135deg, #ffe9f3, #ffdbea);
+    color: var(--pink-deep);
+    font-weight: 800;
+    padding: 11px 12px;
+    text-align: left;
+    font-size: 12.5px;
+  }
+  tbody td { padding: 11px 12px; border-bottom: 1px solid var(--line); color: var(--ink-soft); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody td:first-child { font-weight: 700; color: var(--ink); }
+  .good { color: #2e9e6b; font-weight: 700; }
+  .bad { color: #e0503f; font-weight: 700; }
+  .recommend { display: inline-block; font-size: 10.5px; padding: 2px 8px; border-radius: 10px; background: var(--pink-deep); color: #fff; margin-left: 6px; vertical-align: middle; }
+
+  /* 流程 */
+  .flow { display: flex; flex-direction: column; gap: 0; margin-bottom: 8px; }
+  .flow-step { display: flex; gap: 16px; padding-bottom: 20px; position: relative; }
+  .flow-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 17px; top: 38px; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--pink-soft), transparent);
+  }
+  .flow-num {
+    width: 36px; height: 36px; flex-shrink: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+    color: #fff; font-weight: 800; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 5px 14px rgba(255, 61, 139, 0.28);
+    position: relative; z-index: 1;
+  }
+  .flow-body { padding-top: 5px; }
+  .flow-body .ft { font-size: 14.5px; font-weight: 800; color: var(--ink); margin-bottom: 3px; }
+  .flow-body .fd { font-size: 13px; color: var(--ink-mute); }
+
+  /* 高亮盒 */
+  .highlight {
+    border-radius: 14px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #fff2f8, #ffe8f4);
+    border-left: 4px solid var(--pink-deep);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+  .highlight b { color: var(--pink-deep); }
+
+  /* 待确认列表 */
+  .confirm-item {
+    display: flex;
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    margin-bottom: 12px;
+    background: #fffbfd;
+  }
+  .confirm-q {
+    width: 26px; height: 26px; flex-shrink: 0;
+    border-radius: 8px;
+    background: var(--pink-soft);
+    color: var(--pink-deep);
+    font-weight: 800; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .confirm-body .cq { font-size: 14px; font-weight: 800; color: var(--ink); margin-bottom: 6px; }
+  .confirm-body .ca { font-size: 13px; color: var(--ink-soft); }
+  .confirm-body .ca .default-tag { display: inline-block; font-size: 10.5px; padding: 1px 7px; border-radius: 8px; background: #d8f3e3; color: #1f8a55; font-weight: 700; margin-right: 6px; }
+
+  /* 里程碑 */
+  .mile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .mile {
+    border-radius: 14px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    background: #fffbfd;
+    position: relative;
+  }
+  .mile.done { background: linear-gradient(135deg, #eafaf1, #d8f3e3); border-color: #b6e5cb; }
+  .mile-tag { font-size: 10.5px; font-weight: 800; letter-spacing: 1px; color: var(--pink-deep); margin-bottom: 8px; }
+  .mile.done .mile-tag { color: #1f8a55; }
+  .mile-t { font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
+  .mile-d { font-size: 12px; color: var(--ink-mute); line-height: 1.6; }
+
+  footer.doc-foot {
+    padding: 28px 52px 40px;
+    font-size: 12px;
+    color: var(--ink-mute);
+    text-align: center;
+    border-top: 1px solid var(--line);
+    background: var(--pink-mist);
+  }
+  footer.doc-foot b { color: var(--pink-deep); }
+
+  @media (max-width: 640px) {
+    .cover, .body-inner, footer.doc-foot { padding-left: 22px; padding-right: 22px; }
+    .cover h1 { font-size: 25px; }
+    .cover-meta { flex-wrap: wrap; gap: 16px; }
+    .arch-label { width: 88px; font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <!-- 封面 -->
+  <div class="cover">
+    <span class="cover-tag">DESIGN PROPOSAL</span>
+    <h1>「情侣 100 天纪念日许愿星」<br><em>互动网站设计方案</em></h1>
+    <p>以 100 颗许愿星承载 100 段相处记录，点亮即解锁，缓慢而郑重地重温你们的故事。</p>
+    <div class="cover-meta">
+      <div><b>100</b>颗许愿星</div>
+      <div><b>5 min</b>冷却时长（可配置）</div>
+      <div><b>1</b>个分享链接</div>
+      <div><b>0</b>门槛访问</div>
+    </div>
+  </div>
+
+  <div class="body-inner">
+
+    <!-- 一、整体架构 -->
+    <section class="sec">
+      <div class="sec-head"><span class="sec-idx">01</span><h2>整体架构设计</h2></div>
+      <p class="sec-sub">前端 · 后端 · 数据存储 · 部署方式的选择与理由</p>
+
+      <p class="para">核心判断：这是一个<strong>个人情感场景、无登录、单次分享</strong>的小型站点，访问量与并发极低。因此架构目标是<strong>「极简可维护」而非「高并发可扩展」</strong>——能零成本部署、能在本机一行命令更新，就是最优解。据此采用<strong>渐进式架构</strong>：先纯前端跑通，再按需叠加服务端能力。</p>
+
+      <div class="arch">
+        <div class="arch-row">
+          <div class="arch-label">前端</div>
+          <div class="arch-body">
+            <div class="t">单页应用：HTML + CSS + 原生 JS（Canvas / DOM + CSS 动画）</div>
+            <div class="d">不引入 React/Vue 等框架。理由：页面交互逻辑集中在"星空渲染 + 点亮 + 卡片"三块，原生实现体积小（单文件 &lt;50KB）、无构建步骤，本机直接改文件即可维护。星空用 DOM 元素便于做逐星动画与点击，百级规模性能无压力。</div>
+          </div>
+        </div>
+        <div class="arch-row">
+          <div class="arch-label">后端</div>
+          <div class="arch-body">
+            <div class="t">阶段一：无后端（纯前端） ／ 阶段二：Serverless 函数（可选）</div>
+            <div class="d">阶段一无需服务器：冷却走本地存储，AI 由浏览器直连大模型接口。阶段二如需"跨设备防绕过"或"隐藏 API Key"，再加一个 Serverless 函数（华为云 FunctionGraph / Cloudflare Workers），仅承担「AI 代理」与「冷却状态读写」两件事，不引入常驻服务器。</div>
+          </div>
+        </div>
+        <div class="arch-row">
+          <div class="arch-label">数据存储</div>
+          <div class="arch-body">
+            <div class="t">素材：静态 JSON（records.json）；冷却状态：localStorage（可选 KV）</div>
+            <div class="d">素材以「编号 → 文本」的稀疏 Map 存储，编号本身就是 key，<strong>天然支持缺号 / 跳号</strong>；渲染时遍历 1–100，无对应 key 的位置渲染为"待补充空位"。冷却状态存本机 localStorage；如需服务端，用 Serverless 附带 KV / 轻量数据库。</div>
+          </div>
+        </div>
+        <div class="arch-row">
+          <div class="arch-label">部署</div>
+          <div class="arch-body">
+            <div class="t">GitHub Pages（主）＋ jsDelivr CDN 镜像（国内访问）</div>
+            <div class="d">零成本、免运维，本机 <code>git push</code> 即完成更新，链接永久不变。国内访问不稳定时，用 jsDelivr CDN 生成国内可访问的镜像链接（已验证为本场景最稳方案）。也可选华为云 OBS 静态托管 / 云函数。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 二、冷却机制 -->
+    <section class="sec">
+      <div class="sec-head"><span class="sec-idx">02</span><h2>冷却机制实现方案</h2></div>
+      <p class="sec-sub">本地存储 vs 服务端识别，以及「无登录下如何识别同一访问者」</p>
+
+      <p class="para">需求要"同一访问者需间隔一定时间才能点亮下一颗"。难点在于：<strong>没有登录体系，如何定义"同一访问者"？</strong>本质是"用什么标识去绑定一条冷却记录"。下面先横向对比，再给结论。</p>
+
+      <table>
+        <thead>
+          <tr><th style="width:22%">方案</th><th>优点</th><th>缺点</th><th style="width:14%">结论</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>localStorage</td>
+            <td>零成本、零延迟、无需服务器；数据不出本机，隐私友好；实现最简单</td>
+            <td>清缓存 / 换浏览器 / 无痕模式可绕过；仅单设备有效</td>
+            <td><span class="good">首选</span><span class="recommend">默认</span></td>
+          </tr>
+          <tr>
+            <td>Cookie</td>
+            <td>可设过期时间，服务端也能读到；比 localStorage 稍"正式"</td>
+            <td>容量小（4KB）；同样可被清除；跨域场景受限</td>
+            <td>备选</td>
+          </tr>
+          <tr>
+            <td>服务端 + 设备指纹</td>
+            <td>难绕过、可跨浏览器统计；可做风控</td>
+            <td>需后端与存储；指纹有隐私争议与误判；部署维护成本上升</td>
+            <td>可选增强</td>
+          </tr>
+          <tr>
+            <td>服务端 + 账户登录</td>
+            <td>最严格，天然跨设备</td>
+            <td>需注册登录，破坏"点开链接就玩"的浪漫体验</td>
+            <td><span class="bad">不推荐</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="highlight">
+        <b>结论：</b>这是给恋人的私人小站，防作弊不是目的，<b>"让 TA 慢慢点亮、把节奏拉长"才是目的</b>。因此默认采用 <b>localStorage</b> 方案——同一浏览器即视为"同一访问者"，冷却状态存本地。若被清缓存"绕过"，损失的只是仪式感，并不影响体验公平性，故无需付出后端复杂度。
+      </div>
+
+      <div class="card">
+        <h3><span class="dot-mark"></span>无登录下如何识别「收到链接的同一访问者」</h3>
+        <ul>
+          <li><b>阶段一（默认）：</b>浏览器实例 = 访问者。localStorage 存 <code>{ lit: [已点亮编号], lastLitAt: 最后点亮时间戳 }</code>，读取 <code>lastLitAt</code> 与当前时间差判断是否在冷却期。</li>
+          <li><b>阶段二（可选）：</b>若要防"换浏览器重置"，由 Serverless 用<b>弱指纹</b>（Canvas 指纹 + UA + 屏幕尺寸 + 时区）生成匿名设备 ID，配合链接唯一 token（<code>?gift=&lt;token&gt;</code>）落库。代价是需引入后端与隐私说明，仅在你明确要求"更严格"时启用。</li>
+          <li><b>不做：</b>强制登录 / 手机号验证。会显著抬高 TA 的进入门槛，与"温馨、无压力"的定位冲突。</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3><span class="dot-mark"></span>冷却可配置设计</h3>
+        <ul>
+          <li>代码顶部统一 <code>CONFIG.COOLDOWN_SECONDS</code>：测试期设为 <b>300</b>（5 分钟），上线可改 30 分钟 / 1 小时 / 1 天。<b>无需改逻辑，只改一个数字。</b></li>
+          <li>配套开关 <code>LOCK_OTHERS_DURING_CD</code>：冷却期间是否把其余星星置灰锁定（原型默认开启，视觉上强化"等待感"）。</li>
+          <li>管理侧可另做隐藏入口（如 URL 加 <code>?admin=1</code>）一键重置冷却，便于你自测。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 三、大模型 API -->
+    <section class="sec">
+      <div class="sec-head"><span class="sec-idx">03</span><h2>大模型 API 接入方案</h2></div>
+      <p class="sec-sub">用途 · 接入方式 · 调用位置 · 成本 · 异常降级</p>
+
+      <div class="card">
+        <h3><span class="dot-mark"></span>在本项目中的具体用途</h3>
+        <ul>
+          <li><b>情话回信：</b>TA 点亮一颗星、读完那段回忆后，可点「生成情话回信」，由大模型<b>基于该条记录的内容</b>写一句专属回应（不是套话模板）。这是最贴合情感场景的用法。</li>
+          <li><b>周年总结（彩蛋）：</b>集齐/点满若干颗后，把所有记录喂给模型，生成一段"我们的 100 天总结"。</li>
+          <li><b>不做的事：</b>不用 AI 替你们"编写回忆"。回忆必须是你亲手写的真实素材，AI 只负责"回应"与"润色氛围"，守住真诚的底线。</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3><span class="dot-mark"></span>接入方式与调用位置</h3>
+        <ul>
+          <li><b>服务商（默认建议）：</b>DeepSeek（成本极低、国内直连稳定、OpenAI 兼容接口）或阿里云通义千问。均采用 <b>OpenAI 兼容协议</b>，便于日后一行切换服务商。</li>
+          <li><b>调用位置：</b>记录卡片内的「生成情话回信」按钮 → 触发一次 chat 请求，prompt 注入「当前记录原文 + 关系语境」，返回文本填入卡片。</li>
+          <li><b>两种接入形态：</b>①<b>前端直连</b>（个人场景，最省事，但 API Key 会出现在浏览器）；②<b>Serverless 代理</b>（Key 存服务端环境变量，前端只调你的函数，更安全，需多部署一个函数）。默认建议先直连跑通，若要分享扩散再切代理。</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3><span class="dot-mark"></span>调用成本</h3>
+        <ul>
+          <li>DeepSeek 约 ¥1 / 百万 tokens 量级，单次"情话回信"（输入+输出约 300 tokens）成本约 <b>¥0.0003</b>。</li>
+          <li>即便 100 条记录每次都被生成，总成本也 <b>不足 ¥0.05</b>，可忽略。真正的约束是"避免滥用"而非费用。</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3><span class="dot-mark"></span>异常降级策略</h3>
+        <ul>
+          <li><b>超时 / 失败 / 未配置 Key：</b>自动回退到本地预置文案库（每条记录可配 1–2 句手写祝福，随机取一句），保证"永远有回应"，页面绝不报错。</li>
+          <li><b>请求节流：</b>同一记录短时间内重复点击不重复计费；加 loading 态与 3 秒超时。</li>
+          <li><b>降级可见但不突兀：</b>兜底文案与 AI 文案在体验上保持一致，用户无感。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 四、场景与流程 -->
+    <section class="sec">
+      <div class="sec-head"><span class="sec-idx">04</span><h2>适用场景与使用流程</h2></div>
+      <p class="sec-sub">从"你准备素材"到"TA 逐颗点亮"的完整路径</p>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-body">
+            <div class="ft">你：准备素材并部署</div>
+            <div class="fd">整理 100 条相处记录（编号 + 文本，可缺号），填入 records.json → 部署到公网 → 得到一条链接。</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-body">
+            <div class="ft">你：把链接发给 TA</div>
+            <div class="fd">通过微信等任意渠道发送，附一句"送你 100 颗星星"。链接可带专属 token，便于日后区分是否为 TA 的访问。</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-body">
+            <div class="ft">TA：打开即见星空</div>
+            <div class="fd">无需注册、无需下载。首屏是一片深粉夜空与 100 颗微光星，顶部显示「已点亮 0 / 100」。</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <div class="flow-body">
+            <div class="ft">TA：点亮第一颗星</div>
+            <div class="fd">轻触任意微光星 → 星光爆闪 + 轻柔铃音 → 弹出卡片，逐字浮现那段回忆 → 可点「生成情话回信」看 AI 回应。</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">5</div>
+          <div class="flow-body">
+            <div class="ft">冷却循环：每 5 分钟一颗</div>
+            <div class="fd">点亮后底部进入倒计时，其余星星锁定置灰。冷却结束才能再点亮——把"一次读完"变成"慢慢期待"。</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">6</div>
+          <div class="flow-body">
+            <div class="ft">进度累积 → 彩蛋</div>
+            <div class="fd">进度逐步向 100 迈进，集满时触发专属彩蛋（如全屏星光 + AI 生成的百天总结 + 一段隐藏祝福）。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="highlight">
+        <b>为什么要把节奏拉长？</b>若 100 颗星一次性全部点亮，用户会在 10 分钟内看完随后遗忘。冷却机制把"纪念碑"变成了 <b>"每天回来看看的日常仪式"</b>——这才是纪念日产品真正的价值：让 TA 反复想起你。
+      </div>
+    </section>
+
+    <!-- 五、可维护性 -->
+    <section class="sec">
+      <div class="sec-head"><span class="sec-idx">05</span><h2>方案的可维护性</h2></div>
+      <p class="sec-sub">替换素材 · 调整冷却 · 重新部署，均由本机完成</p>
+
+      <div class="card">
+        <h3><span class="dot-mark"></span>替换 / 新增素材</h3>
+        <ul>
+          <li>只编辑 <code>records.json</code>：<code>"12": "文本…"</code>，编号为 key。</li>
+          <li>新增：加一行即可；删除：删一行；<b>缺号 / 跳号天然支持</b>，对应位置自动渲染为"待补充空位"，不影响其余星星。</li>
+          <li>改完 <code>git push</code>，刷新链接即生效——<b>链接不会变</b>，无需重新分享。</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3><span class="dot-mark"></span>调整冷却时间</h3>
+        <ul>
+          <li>改 <code>CONFIG.COOLDOWN_SECONDS</code> 一个数字：测试 <code>300</code> → 上线可改 <code>1800</code> / <code>3600</code> / <code>86400</code>。</li>
+          <li>可选提供 <code>?admin=1</code> 管理入口，一键清空本地冷却与点亮记录，方便你自己反复测试。</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3><span class="dot-mark"></span>重新部署</h3>
+        <ul>
+          <li>本机执行 <code>npm run deploy</code>（封装 git push）或直接 <code>git push</code>，GitHub Pages 自动重建。</li>
+          <li>预计 30 秒内生效，公网链接保持不变。</li>
+          <li>项目目录结构建议：<code>index.html</code>（页面）、<code>records.json</code>（素材）、<code>config.js</code>（冷却/AI 配置）、<code>README.md</code>（维护说明）。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 六、交互与动效 -->
+    <section class="sec">
+      <div class="sec-head"><span class="sec-idx">06</span><h2>交互稿思路与动效说明</h2></div>
+      <p class="sec-sub">粉色系 · 少女心 · Kitty 装饰，以及每处动效的选择理由</p>
+
+      <p class="para">交互原型已同步产出（链接见交付说明），可点击体验。整体视觉采用<b>深粉夜空 + 暖粉星光</b>：背景是深紫粉渐变夜空，右上角一轮柔光月亮，角落点缀粉色小猫（蝴蝶结 + 圆脸 + 胡须的抽象形象）作为背景装饰，不喧宾夺主。</p>
+
+      <div class="card">
+        <h3><span class="dot-mark"></span>关键动效及其选择理由</h3>
+        <ul>
+          <li><b>未点亮星：微光呼吸。</b>每颗暗星以随机相位缓慢明灭，让"星空是活的"，暗示"它们在等你"。理由：静态星空缺乏邀请感，呼吸光营造"等待被点亮"的期待。</li>
+          <li><b>点亮瞬间：星光爆闪 + 八向射线 + 合成铃音。</b>点击后星光从星核向外绽放，同时用 Web Audio 合成一段轻柔三音阶铃音。理由：给"点亮"一次郑重的仪式感；音效用<b>代码合成而非外部音频文件</b>——体积为零、无版权风险、不受网络影响。</li>
+          <li><b>记录卡片：弹性缩放入场 + 文字逐字渐显（blur→清晰）。</b>理由：逐字浮现模拟"有人在耳边慢慢把这段话念给你听"，比整段直接显示更温柔、更有情绪节奏。</li>
+          <li><b>已点亮星：缓慢漂浮 + 持续柔光。</b>理由：与暗星形成"已点亮 / 待点亮"的视觉区分，一眼看清进度。</li>
+          <li><b>冷却期：底部倒计时条 + 其余星星置灰锁定。</b>理由：把"不能点"的原因可视化，等待变成可见的期待，而非困惑。</li>
+        </ul>
+      </div>
+
+      <div class="highlight">
+        <b>动效原则：</b>克制而不堆砌。全场只保留"点亮"这一处高光时刻，其余动效都放慢、放柔，让每一次点亮都值得。避免过多花哨特效——那会让温馨感变成廉价感。<b>适配：</b>星空区使用方形自适应容器 + <code>clamp()</code> 字号，覆盖手机 / 平板 / 桌面；并尊重系统「减少动态效果」偏好。
+      </div>
+    </section>
+
+    <!-- 七、待确认事项 -->
+    <section class="sec">
+      <div class="sec-head"><span class="sec-idx">07</span><h2>待确认事项 · 我的默认方案</h2></div>
+      <p class="sec-sub">以下为默认选择，您可逐条修改，确认后我即进入开发</p>
+
+      <div class="confirm-item">
+        <div class="confirm-q">1</div>
+        <div class="confirm-body">
+          <div class="cq">大模型 API 服务商与密钥提供方式</div>
+          <div class="ca"><span class="default-tag">默认</span>DeepSeek（OpenAI 兼容协议），密钥由您提供并先存本地配置；未配置时自动走本地兜底文案，不影响体验。</div>
+        </div>
+      </div>
+
+      <div class="confirm-item">
+        <div class="confirm-q">2</div>
+        <div class="confirm-body">
+          <div class="cq">公网部署承载方式</div>
+          <div class="ca"><span class="default-tag">默认</span>GitHub Pages 部署 + jsDelivr CDN 国内镜像链接；您本机 <code>git push</code> 即完成维护更新，链接永久不变。若您更倾向华为云，可改用 OBS 静态托管。</div>
+        </div>
+      </div>
+
+      <div class="confirm-item">
+        <div class="confirm-q">3</div>
+        <div class="confirm-body">
+          <div class="cq">是否需要登录 / 身份区分</div>
+          <div class="ca"><span class="default-tag">默认</span>不做登录，仅按浏览器（localStorage）维度做冷却限制。同一浏览器 = 同一访问者，零门槛、隐私友好。</div>
+        </div>
+      </div>
+
+      <div class="confirm-item">
+        <div class="confirm-q">4</div>
+        <div class="confirm-body">
+          <div class="cq">100 颗星星：一次性展示 vs 逐日解锁</div>
+          <div class="ca"><span class="default-tag">默认</span><b>一次性全部展示 100 颗</b>，依靠 5 分钟冷却控制节奏（缺号位置渲染为"待补充空位"）。若您想强化"每天回来一次"，可切换为"按天解锁"模式（每天最多点亮 N 颗），此模式我会做成一个配置开关。</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 八、里程碑 -->
+    <section class="sec">
+      <div class="sec-head"><span class="sec-idx">08</span><h2>开发里程碑</h2></div>
+      <p class="sec-sub">确认方案后的推进节奏</p>
+
+      <div class="mile-grid">
+        <div class="mile done">
+          <div class="mile-tag">M1 · 已完成</div>
+          <div class="mile-t">设计方案 + 交互原型</div>
+          <div class="mile-d">本文档 + 可点击原型 Demo（示例数据）</div>
+        </div>
+        <div class="mile">
+          <div class="mile-tag">M2 · 待确认</div>
+          <div class="mile-t">完整可运行页面与架构</div>
+          <div class="mile-d">搭建完整交互页面（含冷却、卡片、动效），用示例数据跑通</div>
+        </div>
+        <div class="mile">
+          <div class="mile-tag">M3</div>
+          <div class="mile-t">您提供 100 条素材</div>
+          <div class="mile-d">按「编号 + 文本」提交，我填入 records.json（缺号自动处理）</div>
+        </div>
+        <div class="mile">
+          <div class="mile-tag">M4</div>
+          <div class="mile-t">接入大模型 API</div>
+          <div class="mile-d">情话回信 + 兜底降级，配置密钥</div>
+        </div>
+        <div class="mile">
+          <div class="mile-tag">M5</div>
+          <div class="mile-t">公网部署交付</div>
+          <div class="mile-d">部署链接 + 本机维护说明（改素材 / 改冷却 / 重新部署）</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="doc-foot">
+    情侣 100 天纪念日许愿星 · 设计方案 v1.0 &nbsp;|&nbsp; 配套交互原型：<b>wish-star-prototype.html</b><br>
+    确认本方案后，我将进入 M2 开发阶段
+  </footer>
+</div>
+</body>
+</html>
