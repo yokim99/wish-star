@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#17092b">
-<title>我们的 100 颗许愿星</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 3 L40 23 L62 25 L45.5 39.5 L51 61 L32 49 L13 61 L18.5 39.5 L2 25 L24 23 Z' fill='%23ff3d8b'/><circle cx='32' cy='30' r='7' fill='%23fff6fa' opacity='.65'/></svg>">
+<title>敏老师和璇老师的100颗回忆星</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
@@ -69,9 +70,9 @@
   .kitty-face-svg { display: block; }
 
   .app-title {
-    font-size: 22px;
+    font-size: 21px;
     font-weight: 800;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     background: linear-gradient(90deg, #fff 0%, var(--pink-soft) 50%, #fff 100%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -288,11 +289,71 @@
   .cd-timer.ready { color: var(--pink-soft); font-size: 15px; }
   .cooldown-bar.ready { background: rgba(255, 182, 193, 0.12); }
 
+  /* ===== 左侧许愿瓶 ===== */
+  .wish-bottle-wrap {
+    position: fixed;
+    left: clamp(10px, calc(50% - 352px), 42vw);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+  }
+
+  .bottle-count {
+    pointer-events: auto;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: rgba(255, 61, 139, 0.18);
+    border: 1px solid rgba(255, 182, 193, 0.4);
+    color: var(--pink-soft);
+    font-size: 12.5px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    box-shadow: 0 0 20px rgba(255, 119, 176, 0.28);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .bottle {
+    pointer-events: auto;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    width: 100px;
+    filter: drop-shadow(0 6px 22px rgba(255, 119, 176, 0.4));
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+
+  .bottle:hover { transform: translateY(-4px) scale(1.04); }
+  .bottle:active { transform: scale(0.97); }
+
+  .bottle-svg { display: block; width: 100%; height: auto; }
+
+  .bottle.flash { filter: drop-shadow(0 0 30px rgba(255, 182, 193, 0.95)); }
+  .bottle.flash .bottle-glow { animation: bottle-flash 0.85s ease; }
+  .bottle.flash .bottle-body { animation: bottle-body-flash 0.85s ease; }
+
+  @keyframes bottle-flash {
+    0% { opacity: 0; }
+    35% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes bottle-body-flash {
+    0%, 100% { filter: none; }
+    40% { filter: brightness(1.6) drop-shadow(0 0 18px #ffd9e8); }
+  }
+
   /* ===== 记录卡片弹窗 ===== */
   .modal {
     position: fixed;
     inset: 0;
-    z-index: 50;
+    z-index: 70;
     display: none;
     align-items: center;
     justify-content: center;
@@ -309,13 +370,15 @@
     position: relative;
     width: 100%;
     max-width: 400px;
+    max-height: 86vh;
+    overflow-y: auto;
+    overflow-x: hidden;
     border-radius: 22px;
     padding: 30px 26px 24px;
     background: var(--card);
     color: var(--ink);
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 182, 193, 0.5), 0 0 44px rgba(255, 119, 176, 0.35);
     animation: card-in 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
-    overflow: hidden;
   }
 
   @keyframes card-in {
@@ -330,6 +393,7 @@
     width: 140px; height: 140px;
     border-radius: 50%;
     background: radial-gradient(circle, rgba(255, 119, 176, 0.22) 0%, transparent 70%);
+    pointer-events: none;
   }
 
   .card-num {
@@ -351,7 +415,7 @@
   .card-num .hash { font-size: 11px; opacity: 0.8; }
 
   .card-body {
-    margin: 20px 0 18px;
+    margin: 20px 0 12px;
     font-size: 15.5px;
     line-height: 1.85;
     color: var(--ink);
@@ -372,47 +436,113 @@
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255, 61, 139, 0.25), transparent);
     margin-bottom: 16px;
-  }
-
-  .ai-zone {
-    border-radius: 14px;
-    padding: 14px 16px;
-    background: linear-gradient(135deg, rgba(255, 217, 232, 0.55), rgba(255, 252, 254, 0.9));
-    border: 1px dashed rgba(255, 61, 139, 0.35);
     position: relative;
     z-index: 1;
   }
 
-  .ai-head {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11.5px;
-    font-weight: 700;
-    color: var(--pink-deep);
-    margin-bottom: 8px;
-    letter-spacing: 0.5px;
+  /* ===== 回应区 ===== */
+  .reply-zone {
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.34, 1.4, 0.64, 1);
   }
 
-  .ai-body { font-size: 13.5px; line-height: 1.7; color: var(--ink-soft); min-height: 22px; }
+  .reply-zone.show { opacity: 1; transform: translateY(0); }
 
-  .ai-btn {
-    margin-top: 10px;
-    border: none;
-    border-radius: 10px;
-    padding: 8px 16px;
-    font-size: 12px;
+  .reply-guide {
+    font-size: 12.5px;
     font-weight: 700;
+    color: var(--pink-deep);
+    letter-spacing: 0.3px;
+    margin-bottom: 10px;
+    line-height: 1.6;
+  }
+
+  .reply-existing {
+    margin-bottom: 10px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(255, 217, 232, 0.55), rgba(255, 252, 254, 0.9));
+    border: 1px dashed rgba(255, 61, 139, 0.3);
+  }
+
+  .reply-existing-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: var(--pink-deep);
+    margin-bottom: 6px;
+  }
+
+  .reply-time {
+    font-weight: 600;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .reply-existing-text {
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--ink);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .reply-empty {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    text-align: center;
+    padding: 4px 0;
+  }
+
+  .reply-text {
+    width: 100%;
+    min-height: 74px;
+    resize: vertical;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 61, 139, 0.28);
+    background: rgba(255, 255, 255, 0.85);
+    padding: 11px 13px;
+    font-family: inherit;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+
+  .reply-text:focus {
+    border-color: var(--pink-deep);
+    box-shadow: 0 0 0 3px rgba(255, 61, 139, 0.14);
+  }
+
+  .reply-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .reply-btn {
+    border: none;
+    border-radius: 12px;
+    padding: 10px 22px;
+    font-size: 13px;
+    font-weight: 800;
     color: #fff;
     cursor: pointer;
     background: linear-gradient(135deg, var(--pink), var(--pink-deep));
-    box-shadow: 0 4px 12px rgba(255, 61, 139, 0.32);
+    box-shadow: 0 6px 16px rgba(255, 61, 139, 0.34);
     transition: transform 0.2s;
     font-family: inherit;
+    letter-spacing: 0.5px;
   }
 
-  .ai-btn:active { transform: scale(0.96); }
-  .ai-btn[disabled] { opacity: 0.6; cursor: default; }
+  .reply-btn:active { transform: scale(0.96); }
 
   .card-close {
     position: absolute;
@@ -424,7 +554,7 @@
     color: var(--pink-deep);
     font-size: 17px;
     cursor: pointer;
-    z-index: 2;
+    z-index: 3;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -434,7 +564,7 @@
   .admin-bar {
     position: fixed;
     top: 12px; right: 12px;
-    z-index: 60;
+    z-index: 90;
     display: none;
     gap: 8px;
   }
@@ -453,6 +583,209 @@
   }
 
   .admin-btn:active { transform: scale(0.96); }
+
+  /* ===== 银河视图 ===== */
+  .galaxy {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: none;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 52%, #2c123c 0%, #150829 62%, #050210 100%);
+  }
+
+  .galaxy.show { display: block; animation: fade-in 0.45s ease; }
+
+  .galaxy-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(115deg, transparent 26%, rgba(255, 182, 193, 0.20) 47%, rgba(150, 120, 255, 0.16) 56%, transparent 74%),
+      radial-gradient(circle at 28% 66%, rgba(255, 119, 176, 0.24) 0%, transparent 42%),
+      radial-gradient(circle at 74% 30%, rgba(160, 140, 255, 0.20) 0%, transparent 44%),
+      radial-gradient(circle at 50% 50%, rgba(255, 246, 250, 0.06) 0%, transparent 60%);
+  }
+
+  .galaxy-fog { position: absolute; inset: 0; pointer-events: none; }
+
+  .galaxy-fog span {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff6fa;
+    opacity: 0;
+    animation: fog-twinkle 3.4s ease-in-out infinite;
+  }
+
+  @keyframes fog-twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 0.9; transform: scale(1.1); }
+  }
+
+  .galaxy-stars { position: absolute; inset: 0; z-index: 2; }
+
+  .g-star {
+    position: absolute;
+    width: 26px; height: 26px;
+    margin: -13px 0 0 -13px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .g-star .g-dot {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 0%, var(--pink-soft) 45%, transparent 72%);
+    box-shadow: 0 0 12px var(--pink-soft), 0 0 26px rgba(255, 182, 193, 0.55);
+    animation: g-float 4s ease-in-out infinite;
+    animation-delay: var(--d, 0s);
+  }
+
+  @keyframes g-float {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.28); opacity: 1; }
+  }
+
+  .g-star:hover { transform: scale(1.25); }
+
+  .galaxy-empty {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    width: 80%;
+  }
+
+  .galaxy-head {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 20px;
+  }
+
+  .galaxy-title {
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #fff;
+    text-shadow: 0 0 22px rgba(255, 182, 193, 0.8);
+  }
+
+  .galaxy-close {
+    position: absolute;
+    top: 14px; right: 16px;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 182, 193, 0.35);
+    background: rgba(255, 61, 139, 0.16);
+    color: var(--pink-soft);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .galaxy-foot {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    padding: 18px;
+  }
+
+  .galaxy-random {
+    border: 1px solid rgba(255, 182, 193, 0.45);
+    background: linear-gradient(135deg, rgba(255, 119, 176, 0.28), rgba(255, 61, 139, 0.4));
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 11px 26px;
+    border-radius: 24px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(255, 61, 139, 0.32);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .galaxy-random:active { transform: scale(0.97); }
+
+  /* ===== 回应互动效果 ===== */
+  .ascend {
+    position: fixed;
+    inset: 0;
+    z-index: 110;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 119, 176, 0.26) 0%, rgba(23, 9, 43, 0.82) 68%);
+    pointer-events: none;
+  }
+
+  .ascend.show { display: flex; animation: fade-in 0.4s ease; }
+
+  .ascend-sparks { position: absolute; inset: 0; overflow: hidden; }
+
+  .ascend-spark {
+    position: absolute;
+    left: 50%; top: 62%;
+    width: 7px; height: 7px;
+    margin: -3.5px 0 0 -3.5px;
+    border-radius: 50%;
+    background: #fff6fa;
+    box-shadow: 0 0 14px var(--pink-soft);
+    animation: spark-rise 1.4s ease-out forwards;
+  }
+
+  @keyframes spark-rise {
+    0% { opacity: 0; transform: translate(0, 0) scale(0.4); }
+    30% { opacity: 1; }
+    100% { opacity: 0; transform: translate(var(--x), var(--y)) scale(1.3); }
+  }
+
+  .ascend-text {
+    position: relative;
+    z-index: 2;
+    max-width: 82%;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.9;
+    letter-spacing: 1px;
+    color: #fff;
+    text-shadow: 0 0 26px rgba(255, 182, 193, 0.95);
+    animation: ascend-pop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes ascend-pop {
+    0% { opacity: 0; transform: scale(0.7) translateY(14px); }
+    55% { opacity: 1; transform: scale(1.06) translateY(-4px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* ===== 飞行星星 ===== */
+  .fly-star {
+    position: fixed;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 0%, var(--pink-soft) 45%, var(--pink) 100%);
+    box-shadow: 0 0 14px var(--pink-soft), 0 0 28px var(--pink-mist);
+    z-index: 115;
+    pointer-events: none;
+    transition: transform 0.95s cubic-bezier(0.4, 0.05, 0.3, 1), opacity 0.95s ease;
+  }
 
   /* ===== 100 颗彩蛋 ===== */
   .finale {
@@ -523,20 +856,33 @@
   @media (max-height: 720px) {
     .app-header { padding-bottom: 2px; }
     .kitty-badge { display: none; }
-    .app-title { font-size: 19px; }
+    .app-title { font-size: 18px; }
     .app { padding-top: 16px; }
   }
 
   @media (max-width: 380px) {
     .app { padding: 16px 12px 12px; }
-    .app-title { font-size: 19px; letter-spacing: 1px; }
+    .app-title { font-size: 17px; letter-spacing: 0; }
     .card { padding: 26px 20px 20px; }
     .card-body { font-size: 14.5px; }
+  }
+
+  @media (max-width: 760px) {
+    .wish-bottle-wrap {
+      left: 10px;
+      top: auto;
+      bottom: 92px;
+      transform: none;
+      gap: 5px;
+    }
+    .bottle { width: 58px; }
+    .bottle-count { font-size: 10.5px; padding: 3px 10px; }
   }
 
   @media (min-width: 768px) {
     .app { max-width: 560px; }
     .app-title { font-size: 24px; }
+    .bottle { width: 116px; }
   }
 
   /* ===== 尊重减少动效 ===== */
@@ -549,7 +895,9 @@
     .star:not(.lit) .dot { opacity: 0.8; transform: scale(1); }
     .star.lit { animation: none; }
     .card-body .ch { opacity: 1 !important; filter: none !important; transform: none !important; }
-    .finale-stars { display: none; }
+    .reply-zone { opacity: 1 !important; transform: none !important; }
+    .finale-stars, .ascend-sparks, .galaxy-fog { display: none; }
+    .ascend-text { opacity: 1 !important; transform: none !important; }
   }
 </style>
 </head>
@@ -557,6 +905,35 @@
 
 <div class="admin-bar" id="adminBar">
   <button class="admin-btn" id="resetBtn">重置进度</button>
+</div>
+
+<!-- 左侧许愿瓶 -->
+<div class="wish-bottle-wrap" id="wishBottleWrap">
+  <div class="bottle-count"><span class="bc-star">⭐</span> <span id="bottleCountNum">0</span> 颗</div>
+  <button class="bottle" id="bottleBtn" aria-label="打开银河星图" title="打开银河星图">
+    <svg class="bottle-svg" viewBox="0 0 130 210" fill="none">
+      <defs>
+        <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.72"/>
+          <stop offset="46%" stop-color="#ffd9e8" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#ff9ec4" stop-opacity="0.62"/>
+        </linearGradient>
+        <radialGradient id="bottleGlow" cx="50%" cy="62%" r="62%">
+          <stop offset="0%" stop-color="#fff6fa" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#ff77b0" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <ellipse class="bottle-glow" cx="65" cy="140" rx="52" ry="60" fill="url(#bottleGlow)" opacity="0"/>
+      <rect x="51" y="10" width="28" height="18" rx="6" fill="#ff9ec4" opacity="0.92" stroke="#ff3d8b" stroke-width="1.2"/>
+      <rect x="47" y="26" width="36" height="30" rx="9" fill="url(#glassGrad)" stroke="#ff9ec4" stroke-width="1.4"/>
+      <g class="bottle-body">
+        <rect x="16" y="50" width="98" height="150" rx="42" fill="url(#glassGrad)" stroke="#ff9ec4" stroke-width="1.8"/>
+        <path d="M30 66 q10 24 0 46" stroke="#ffffff" stroke-width="3.4" opacity="0.5" stroke-linecap="round"/>
+        <path d="M100 70 q-9 22 0 42" stroke="#ffffff" stroke-width="2.6" opacity="0.35" stroke-linecap="round"/>
+      </g>
+      <g id="bottleDots"></g>
+    </svg>
+  </button>
 </div>
 
 <div class="app">
@@ -577,7 +954,7 @@
         </g>
       </svg>
     </div>
-    <h1 class="app-title">我们的 100 颗许愿星</h1>
+    <h1 class="app-title">敏老师和璇老师的100颗回忆星</h1>
     <p class="app-sub">100 天 · 100 个瞬间 · 点亮属于我们的星光</p>
     <div class="progress">
       <span class="num" id="progressNum">0</span>
@@ -614,18 +991,42 @@
   </footer>
 </div>
 
+<!-- 记录卡片（展示素材原文 + 写回应，无 AI 生成内容） -->
 <div class="modal" id="modal">
   <div class="card">
     <button class="card-close" id="cardClose">✕</button>
     <span class="card-num"><span class="hash">#</span><span id="cardNum">01</span></span>
     <div class="card-body" id="cardBody"></div>
     <div class="card-divider"></div>
-    <div class="ai-zone">
-      <div class="ai-head">💗 AI 为你写一句话</div>
-      <div class="ai-body" id="aiBody">点一下，让 AI 根据这段回忆写句情话回应你</div>
-      <button class="ai-btn" id="aiBtn">生成情话回信</button>
+    <div class="reply-zone" id="replyZone">
+      <div class="reply-guide" id="replyGuide">读完这段回忆，写下你此刻想对 TA 说的话吧</div>
+      <div class="reply-existing" id="replyExisting" style="display:none;"></div>
+      <textarea class="reply-text" id="replyText" rows="3" placeholder="写下此刻想说的话…"></textarea>
+      <div class="reply-actions">
+        <button class="reply-btn" id="replyBtn">提交回应</button>
+      </div>
     </div>
   </div>
+</div>
+
+<!-- 银河视图 -->
+<div class="galaxy" id="galaxy">
+  <div class="galaxy-bg"></div>
+  <div class="galaxy-fog" id="galaxyFog"></div>
+  <div class="galaxy-stars" id="galaxyStars"></div>
+  <div class="galaxy-head">
+    <span class="galaxy-title">我们的银河</span>
+    <button class="galaxy-close" id="galaxyClose">✕</button>
+  </div>
+  <div class="galaxy-foot">
+    <button class="galaxy-random" id="galaxyRandom">🎲 随机打开一颗星星</button>
+  </div>
+</div>
+
+<!-- 回应互动效果 -->
+<div class="ascend" id="ascend">
+  <div class="ascend-sparks" id="ascendSparks"></div>
+  <p class="ascend-text">你已经和星星一块升成新的回忆碎片啦</p>
 </div>
 
 <div class="finale" id="finale">
@@ -657,13 +1058,12 @@ const CONFIG = Object.assign({
   COOLDOWN_SECONDS: 300,
   LOCK_OTHERS_DURING_CD: true,
   DAILY_UNLOCK_MODE: false,
-  DAILY_UNLOCK_COUNT: 5,
-  AI: { ENABLED: true, BASE_URL: 'https://api.deepseek.com/v1', MODEL: 'deepseek-chat', API_KEY: '', TIMEOUT_MS: 3000 }
+  DAILY_UNLOCK_COUNT: 5
 }, window.WISH_STAR_CONFIG || {});
-CONFIG.AI = Object.assign({ ENABLED: true, BASE_URL: 'https://api.deepseek.com/v1', MODEL: 'deepseek-chat', API_KEY: '', TIMEOUT_MS: 3000 }, CONFIG.AI || {});
 
 /* ============================================================
    内联兜底素材：file:// 下 fetch 失败时使用，与 records.json 保持一致
+   界面只展示素材原文，不自行编写/改写
    ============================================================ */
 const FALLBACK_RECORDS = {
   "01": "我总喜欢说你是小狗，其实潜意识里是觉得可爱，深层上是觉得，我希望感情也是像小狗，因为小狗的爱最真诚，因为小狗要是爱你，就会一直爱你。",
@@ -677,16 +1077,6 @@ const FALLBACK_RECORDS = {
   "99": "第 99 天。翻着这些记录才发现，原来被你爱着的每一天，都在悄悄发光。",
   "100": "第 100 天。谢谢你，把平凡的日子过成了星星。"
 };
-
-/* AI 兜底文案（无 API Key / 请求失败 / 超时时使用） */
-const AI_FALLBACK = [
-  "如果爱有形状，大概就是你笑起来的样子。",
-  "记得住这些小事的人，才是认真爱我的人。",
-  "我们的故事没有惊天动地，却每一句都想收藏。",
-  "遇到你以后，普通的一天也值得被点亮。",
-  "谢谢你，让我的日常里住进了一整个春天。",
-  "原来被人放在心上，是这么踏实又欢喜的事。"
-];
 
 /* ============================================================
    素材加载：优先 records.json，失败则回退内联数据
@@ -714,21 +1104,43 @@ async function loadRecords() {
 }
 
 /* ============================================================
-   状态与存储
+   状态与存储（lit / lastLitAt / responses，兼容旧数据）
    ============================================================ */
 const LS_KEY = 'wish-star-state-v1';
 let state = loadState();
 
 function loadState() {
+  let s = null;
   try {
     const raw = localStorage.getItem(LS_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) s = JSON.parse(raw);
   } catch (e) {}
-  return { lit: [], lastLitAt: 0 };
+  if (!s || typeof s !== 'object') s = {};
+  s.lit = Array.isArray(s.lit) ? s.lit : [];
+  s.lastLitAt = typeof s.lastLitAt === 'number' ? s.lastLitAt : 0;
+  s.responses = (s.responses && typeof s.responses === 'object' && !Array.isArray(s.responses)) ? s.responses : {};
+  return s;
 }
 
 function saveState() {
   try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+function prefersReduced() {
+  try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; }
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+function formatTime(ts) {
+  const d = new Date(ts);
+  if (isNaN(d.getTime())) return '';
+  const p = n => String(n).padStart(2, '0');
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
 }
 
 /* ============================================================
@@ -835,6 +1247,46 @@ function updateProgress() {
 }
 
 /* ============================================================
+   许愿瓶：计数 + 瓶内光点
+   ============================================================ */
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+function collectedCount() {
+  return Object.keys(state.responses).filter(k => state.responses[k] && state.responses[k].text).length;
+}
+
+function renderBottleDots(n) {
+  const g = document.getElementById('bottleDots');
+  if (!g) return;
+  g.innerHTML = '';
+  const count = Math.min(n, 100);
+  const colors = ['#fff6fa', '#ffd9e8', '#ff9ec4'];
+  for (let i = 0; i < count; i++) {
+    const c = document.createElementNS(SVG_NS, 'circle');
+    c.setAttribute('cx', (30 + rand(i * 1.7) * 68).toFixed(1));
+    c.setAttribute('cy', (92 + rand(i * 2.9) * 88).toFixed(1));
+    c.setAttribute('r', (1.3 + rand(i * 3.3) * 1.7).toFixed(1));
+    c.setAttribute('fill', colors[i % 3]);
+    c.setAttribute('opacity', '0.9');
+    g.appendChild(c);
+  }
+}
+
+function updateBottle() {
+  const n = collectedCount();
+  const numEl = document.getElementById('bottleCountNum');
+  if (numEl) numEl.textContent = n;
+  renderBottleDots(n);
+}
+
+function flashBottle() {
+  const b = document.getElementById('bottleBtn');
+  if (!b) return;
+  b.classList.add('flash');
+  setTimeout(() => b.classList.remove('flash'), 900);
+}
+
+/* ============================================================
    冷却 UI
    ============================================================ */
 let cdTimer = null;
@@ -885,13 +1337,15 @@ function fmt(ms) {
 }
 
 /* ============================================================
-   记录卡片
+   记录卡片：逐字渐显素材原文 + 写/看回应
    ============================================================ */
 let currentNum = null;
+let replyRevealTimer = null;
 
 function openCard(num) {
   currentNum = num;
   document.getElementById('cardNum').textContent = num;
+
   const body = document.getElementById('cardBody');
   body.innerHTML = '';
   const text = RECORDS[num] || '';
@@ -903,75 +1357,209 @@ function openCard(num) {
     body.appendChild(span);
   });
 
-  const aiBody = document.getElementById('aiBody');
-  const aiBtn = document.getElementById('aiBtn');
-  aiBody.textContent = '点一下，让 AI 根据这段回忆写句情话回应你';
-  aiBtn.disabled = false;
-  aiBtn.style.display = CONFIG.AI.ENABLED ? 'inline-block' : 'none';
-  document.getElementById('modal').classList.add('show');
+  renderReply(num);
+
+  const rz = document.getElementById('replyZone');
+  rz.classList.remove('show');
+  clearTimeout(replyRevealTimer);
+
+  const modal = document.getElementById('modal');
+  modal.classList.add('show');
+  const cardEl = modal.querySelector('.card');
+  if (cardEl) cardEl.scrollTop = 0;
+
+  if (prefersReduced()) {
+    rz.classList.add('show');
+  } else {
+    replyRevealTimer = setTimeout(() => rz.classList.add('show'), Math.max(600, text.length * 28 + 320));
+  }
+}
+
+function renderReply(num) {
+  const existing = document.getElementById('replyExisting');
+  const ta = document.getElementById('replyText');
+  const btn = document.getElementById('replyBtn');
+  const rec = state.responses[num];
+
+  if (rec && rec.text) {
+    existing.style.display = 'block';
+    existing.innerHTML =
+      '<div class="reply-existing-head">你的回应<span class="reply-time">' + escapeHtml(formatTime(rec.time)) + '</span></div>' +
+      '<div class="reply-existing-text">' + escapeHtml(rec.text) + '</div>';
+    ta.value = rec.text;
+    btn.textContent = '更新回应';
+  } else {
+    existing.style.display = 'block';
+    existing.innerHTML = '<div class="reply-empty">这颗星星还没有留下回应</div>';
+    ta.value = '';
+    btn.textContent = '提交回应';
+  }
 }
 
 function closeCard() {
   document.getElementById('modal').classList.remove('show');
+  clearTimeout(replyRevealTimer);
   currentNum = null;
 }
 
 /* ============================================================
-   AI 情话：调用大模型，失败/超时/未配置一律走兜底
+   提交回应 → 温馨互动 → 飞入许愿瓶
    ============================================================ */
-function fallbackLine(num) {
-  const i = (Number(num) || 0) % AI_FALLBACK.length;
-  return AI_FALLBACK[i];
-}
+function submitReply() {
+  const num = currentNum;
+  if (!num) return;
+  const text = (document.getElementById('replyText').value || '').trim();
+  if (!text) { showToast('先写点什么，再交给星星吧 ✨'); return; }
 
-async function generateLove(num, text) {
-  const cfg = CONFIG.AI;
-  if (!cfg.ENABLED || !cfg.API_KEY) return fallbackLine(num);
-  try {
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), cfg.TIMEOUT_MS || 3000);
-    const res = await fetch(cfg.BASE_URL.replace(/\/$/, '') + '/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + cfg.API_KEY
-      },
-      body: JSON.stringify({
-        model: cfg.MODEL,
-        temperature: 1.1,
-        max_tokens: 120,
-        messages: [
-          { role: 'system', content: '你是一位温柔浪漫的情话作者。请根据用户给出的这段恋人回忆，写一句真挚、不肉麻、有画面感的情话回信，40 字以内，不要加引号、不要用 emoji。' },
-          { role: 'user', content: '这段回忆是：' + text }
-        ]
-      }),
-      signal: ctrl.signal
-    });
-    clearTimeout(timer);
-    if (!res.ok) throw new Error('http ' + res.status);
-    const data = await res.json();
-    const line = data && data.choices && data.choices[0] && data.choices[0].message
-      ? String(data.choices[0].message.content || '').trim()
-      : '';
-    return line || fallbackLine(num);
-  } catch (e) {
-    return fallbackLine(num);
+  const firstTime = !(state.responses[num] && state.responses[num].text);
+  state.responses[num] = { text: text, time: Date.now() };
+  saveState();
+
+  closeCard();
+  if (document.getElementById('galaxy').classList.contains('show')) closeGalaxy();
+  playChime();
+
+  if (firstTime) {
+    showAscend(() => flyToBottle(num));
+    showToast('回应已收进许愿瓶里啦 💗');
+  } else {
+    showAscend(null);
+    updateBottle();
+    showToast('回应已更新 💗');
   }
 }
 
-document.getElementById('aiBtn').addEventListener('click', async () => {
-  const el = document.getElementById('aiBody');
-  const btn = document.getElementById('aiBtn');
-  const num = currentNum;
-  btn.disabled = true;
-  el.textContent = 'AI 正在想…';
-  const line = await generateLove(num, RECORDS[num] || '');
-  el.textContent = line;
-  btn.disabled = false;
-});
+let ascendTimer = null;
 
-document.getElementById('cardClose').addEventListener('click', closeCard);
-document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeCard(); });
+function showAscend(cb) {
+  const el = document.getElementById('ascend');
+  const sparks = document.getElementById('ascendSparks');
+  sparks.innerHTML = '';
+  if (!prefersReduced()) {
+    for (let i = 0; i < 30; i++) {
+      const s = document.createElement('span');
+      s.className = 'ascend-spark';
+      s.style.setProperty('--x', ((rand(i * 2.2) - 0.5) * 260).toFixed(0) + 'px');
+      s.style.setProperty('--y', (-70 - rand(i * 3.7) * 200).toFixed(0) + 'px');
+      s.style.animationDelay = (rand(i * 1.3) * 0.5).toFixed(2) + 's';
+      sparks.appendChild(s);
+    }
+  }
+  el.classList.add('show');
+  clearTimeout(ascendTimer);
+  ascendTimer = setTimeout(() => {
+    el.classList.remove('show');
+    if (cb) cb();
+  }, prefersReduced() ? 500 : 2300);
+}
+
+function flyToBottle(num) {
+  const src = starEls[num];
+  const target = document.getElementById('wishBottleWrap');
+  if (!src || !target || prefersReduced()) {
+    flashBottle();
+    updateBottle();
+    return;
+  }
+
+  const s = src.getBoundingClientRect();
+  const t = target.getBoundingClientRect();
+  if (!s.width && !s.height) { flashBottle(); updateBottle(); return; }
+
+  const size = 18;
+  const el = document.createElement('div');
+  el.className = 'fly-star';
+  el.style.left = (s.left + s.width / 2 - size / 2) + 'px';
+  el.style.top = (s.top + s.height / 2 - size / 2) + 'px';
+  document.body.appendChild(el);
+
+  const dx = (t.left + t.width / 2) - (s.left + s.width / 2);
+  const dy = (t.top + t.height * 0.55) - (s.top + s.height / 2);
+
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    if (el.parentNode) el.remove();
+    flashBottle();
+    updateBottle();
+  };
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      el.style.transform = 'translate(' + dx + 'px, ' + dy + 'px) scale(0.45)';
+      el.style.opacity = '0.25';
+    });
+  });
+
+  el.addEventListener('transitionend', finish);
+  setTimeout(finish, 1400);
+}
+
+/* ============================================================
+   银河视图
+   ============================================================ */
+function openGalaxy() {
+  buildGalaxy();
+  document.getElementById('galaxy').classList.add('show');
+}
+
+function closeGalaxy() {
+  document.getElementById('galaxy').classList.remove('show');
+}
+
+function buildGalaxy() {
+  const wrap = document.getElementById('galaxyStars');
+  const fog = document.getElementById('galaxyFog');
+  wrap.innerHTML = '';
+
+  if (!fog.dataset.built) {
+    fog.dataset.built = '1';
+    for (let i = 0; i < 60; i++) {
+      const s = document.createElement('span');
+      const sz = (2 + rand(i * 1.9) * 3).toFixed(1);
+      s.style.width = sz + 'px';
+      s.style.height = sz + 'px';
+      s.style.left = (rand(i * 2.7) * 100).toFixed(2) + '%';
+      s.style.top = (rand(i * 4.1) * 100).toFixed(2) + '%';
+      s.style.animationDelay = (rand(i * 5.3) * 3.4).toFixed(2) + 's';
+      fog.appendChild(s);
+    }
+  }
+
+  const litNums = state.lit.filter(n => RECORDS[n]);
+  if (!litNums.length) {
+    wrap.innerHTML = '<div class="galaxy-empty">银河里还没有星星，先回到星空点亮一颗吧 ✨</div>';
+    return;
+  }
+
+  const total = litNums.length;
+  litNums.forEach((num, i) => {
+    const t = total > 1 ? i / (total - 1) : 0.5;
+    const x = 10 + t * 80 + (rand(i * 2.1) - 0.5) * 12;
+    const y = 24 + Math.sin(t * Math.PI) * 28 + (rand(i * 3.3) - 0.5) * 22;
+
+    const btn = document.createElement('button');
+    btn.className = 'g-star';
+    btn.style.left = Math.max(6, Math.min(94, x)) + '%';
+    btn.style.top = Math.max(14, Math.min(80, y)) + '%';
+    btn.style.setProperty('--d', (rand(i * 5.1) * 3).toFixed(2) + 's');
+    btn.dataset.num = num;
+
+    const dot = document.createElement('span');
+    dot.className = 'g-dot';
+    btn.appendChild(dot);
+    btn.addEventListener('click', () => openCard(num));
+    wrap.appendChild(btn);
+  });
+}
+
+function randomOpenStar() {
+  const litNums = state.lit.filter(n => RECORDS[n]);
+  if (!litNums.length) { showToast('银河里还没有星星呢 ✨'); return; }
+  const num = litNums[Math.floor(Math.random() * litNums.length)];
+  openCard(num);
+}
 
 /* ============================================================
    音效（Web Audio 合成轻柔三音阶铃音）
@@ -1034,7 +1622,17 @@ function showToast(msg) {
 }
 
 /* ============================================================
-   隐藏管理入口（?admin=1）
+   事件绑定
+   ============================================================ */
+document.getElementById('cardClose').addEventListener('click', closeCard);
+document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeCard(); });
+document.getElementById('replyBtn').addEventListener('click', submitReply);
+document.getElementById('bottleBtn').addEventListener('click', openGalaxy);
+document.getElementById('galaxyClose').addEventListener('click', closeGalaxy);
+document.getElementById('galaxyRandom').addEventListener('click', randomOpenStar);
+
+/* ============================================================
+   隐藏管理入口（?admin=1）—— 重置时一并清空 responses
    ============================================================ */
 function setupAdmin() {
   const params = new URLSearchParams(location.search);
@@ -1042,8 +1640,11 @@ function setupAdmin() {
   const bar = document.getElementById('adminBar');
   bar.classList.add('show');
   document.getElementById('resetBtn').addEventListener('click', () => {
-    if (!confirm('确定要重置全部点亮进度吗？此操作不可撤销。')) return;
-    try { localStorage.removeItem(LS_KEY); localStorage.removeItem(LS_KEY + '-daily'); } catch (e) {}
+    if (!confirm('确定要重置全部点亮进度和所有回应吗？此操作不可撤销。')) return;
+    try {
+      localStorage.removeItem(LS_KEY);
+      localStorage.removeItem(LS_KEY + '-daily');
+    } catch (e) {}
     location.reload();
   });
 }
@@ -1055,6 +1656,7 @@ function setupAdmin() {
   await loadRecords();
   buildSky();
   updateProgress();
+  updateBottle();
   updateCooldownUI();
   setupAdmin();
 })();
